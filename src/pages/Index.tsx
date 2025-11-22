@@ -120,9 +120,11 @@ const Index = () => {
               />
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="h-20 flex items-center justify-center px-8">
-                <span className="text-lg font-semibold text-primary">Правительство<br/>Красноярского края</span>
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/files/ae844b63-609e-478e-84dd-abf5793ff926.jpg" 
+                alt="Правительство Красноярского края" 
+                className="h-20 w-auto object-contain"
+              />
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="h-20 flex items-center justify-center px-8">
