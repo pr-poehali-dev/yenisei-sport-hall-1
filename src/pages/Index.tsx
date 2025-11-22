@@ -114,7 +114,7 @@ const Index = () => {
           <div className="flex flex-wrap justify-center items-center gap-8 mb-12">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <img 
-                src="https://cdn.poehali.dev/projects/a9506489-63c9-42b2-9de9-54615ceeaf14/files/eb1d9205-2694-4d23-9837-fe2a7a797d94.jpg" 
+                src="https://cdn.poehali.dev/files/11fb222f-f292-45b6-b061-c6ef8a66ca3f.jpg" 
                 alt="Министерство спорта РФ" 
                 className="h-20 w-auto object-contain"
               />
