@@ -127,9 +127,11 @@ const Index = () => {
               />
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="h-20 flex items-center justify-center px-8">
-                <span className="text-lg font-semibold text-secondary">Нацпроект<br/>«Демография»</span>
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/files/f666dfc0-c8e3-41d2-a8be-930a4a3d03c7.jpg" 
+                alt="Министерство спорта Красноярского края" 
+                className="h-20 w-auto object-contain"
+              />
             </div>
           </div>
         </div>
