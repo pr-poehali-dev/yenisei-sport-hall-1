@@ -357,7 +357,7 @@ const Index = () => {
             Игровые виды спорта в нашем зале
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-5 gap-6 mb-12">
             {sports.map((sport) => (
               <Card key={sport.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover-scale">
                 <div className="h-48 overflow-hidden">
