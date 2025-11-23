@@ -112,6 +112,13 @@ const Index = () => {
             <p className="text-lg md:text-xl text-muted-foreground mb-8">
               Устройство спортивного зала выполнено в рамках Федерального проекта "Бизнес-спринт" (Я выбираю спорт) национального проекта "Демография"
             </p>
+            <div className="mt-8 rounded-lg overflow-hidden shadow-xl">
+              <img 
+                src="https://cdn.poehali.dev/files/a7e7ca58-fd77-450f-8aff-a19d887c22e0.jpg" 
+                alt="Спортивный зал Енисей" 
+                className="w-full h-auto object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
