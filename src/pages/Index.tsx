@@ -357,25 +357,24 @@ const Index = () => {
             Игровые виды спорта в нашем зале
           </h2>
 
-          <div className="grid grid-cols-5 gap-6 mb-12">
+          <div className="grid grid-cols-5 gap-4 mb-12">
             {sports.map((sport) => (
               <Card key={sport.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover-scale">
-                <div className="h-48 overflow-hidden">
+                <div className="h-32 overflow-hidden">
                   <img 
                     src={sport.image} 
                     alt={sport.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <CardHeader>
-                  <CardTitle className="text-2xl">{sport.name}</CardTitle>
-                  <CardDescription>Узнайте правила игры и технику безопасности</CardDescription>
+                <CardHeader className="p-3">
+                  <CardTitle className="text-lg">{sport.name}</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-3 pt-0">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button className="w-full" onClick={() => setSelectedSport(sport.id)}>
-                        Подробнее <Icon name="ChevronRight" className="ml-2" size={18} />
+                      <Button className="w-full" size="sm" onClick={() => setSelectedSport(sport.id)}>
+                        Подробнее <Icon name="ChevronRight" className="ml-1" size={14} />
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
