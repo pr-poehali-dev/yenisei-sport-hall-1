@@ -1,6 +1,7 @@
 import json
 import smtplib
 import os
+import psycopg2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Dict, Any
@@ -54,6 +55,21 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             },
             'body': json.dumps({'error': 'Name and email are required'})
         }
+    
+    db_url = os.environ.get('DATABASE_URL')
+    if db_url:
+        try:
+            conn = psycopg2.connect(db_url)
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO t_p40618121_yenisei_sport_hall_1.feedback_messages (name, email, message) VALUES (%s, %s, %s)",
+                (name, email, message)
+            )
+            conn.commit()
+            cur.close()
+            conn.close()
+        except Exception as e:
+            pass
     
     smtp_host = os.environ.get('SMTP_HOST')
     smtp_port = int(os.environ.get('SMTP_PORT', '465'))

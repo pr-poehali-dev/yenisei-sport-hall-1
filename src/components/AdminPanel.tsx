@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -37,7 +37,24 @@ interface AdminPanelProps {
 const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpdateSports }: AdminPanelProps) => {
   const [editedContacts, setEditedContacts] = useState(contacts);
   const [editedSports, setEditedSports] = useState(sports);
+  const [feedbackStats, setFeedbackStats] = useState<any>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (isOpen) {
+      loadFeedbackStats();
+    }
+  }, [isOpen]);
+
+  const loadFeedbackStats = async () => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/9f020406-6628-478f-ada2-5920d21f64b2');
+      const data = await response.json();
+      setFeedbackStats(data);
+    } catch (error) {
+      console.error('Failed to load feedback stats:', error);
+    }
+  };
 
   const handleSaveContacts = async () => {
     try {
@@ -161,9 +178,12 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         </DialogHeader>
 
         <Tabs defaultValue="contacts" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="contacts">Контакты</TabsTrigger>
             <TabsTrigger value="sports">Виды спорта</TabsTrigger>
+            <TabsTrigger value="feedback">
+              Сообщения ({feedbackStats?.total_count || 0})
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="contacts" className="space-y-4 mt-4">
@@ -311,6 +331,47 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
                 </CardContent>
               </Card>
             ))}
+          </TabsContent>
+
+          <TabsContent value="feedback" className="space-y-4 mt-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="MessageSquare" size={24} />
+                  Статистика сообщений
+                </CardTitle>
+                <CardDescription>
+                  Всего получено сообщений: {feedbackStats?.total_count || 0}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {feedbackStats?.recent_messages?.length > 0 ? (
+                  feedbackStats.recent_messages.map((msg: any, index: number) => (
+                    <Card key={index} className="bg-muted/50">
+                      <CardHeader>
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <CardTitle className="text-lg">{msg.name}</CardTitle>
+                            <CardDescription>{msg.email}</CardDescription>
+                          </div>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(msg.created_at).toLocaleString('ru-RU')}
+                          </span>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Icon name="Inbox" size={48} className="mx-auto mb-2 opacity-50" />
+                    <p>Сообщений пока нет</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </DialogContent>
