@@ -258,11 +258,23 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
                   </div>
                   <div className="space-y-2">
                     <Label>URL видео</Label>
-                    <Input
-                      value={sport.video}
-                      onChange={(e) => updateSportField(sportIndex, 'video', e.target.value)}
-                      placeholder="https://rutube.ru/play/embed/..."
-                    />
+                    <div className="flex gap-2">
+                      <Input
+                        value={sport.video}
+                        onChange={(e) => updateSportField(sportIndex, 'video', e.target.value)}
+                        placeholder="https://rutube.ru/play/embed/..."
+                        className="flex-1"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.open(sport.video, '_blank')}
+                        disabled={!sport.video}
+                      >
+                        <Icon name="ExternalLink" size={16} className="mr-1" />
+                        Проверить
+                      </Button>
+                    </div>
                     {sport.video && (
                       <div className="mt-2 rounded-lg overflow-hidden border">
                         <iframe
