@@ -12,8 +12,7 @@
       "path": "/",
       "body": {
         "name": "Тестовый пользователь",
-        "phone": "+7 999 123-45-67",
-        "sport": "Баскетбол",
+        "email": "test@example.com",
         "message": "Хочу записаться на тренировку"
       },
       "expectedStatus": 200,

@@ -174,7 +174,7 @@ const Index = () => {
         },
         body: JSON.stringify({
           name,
-          phone: email,
+          email,
           message
         })
       });

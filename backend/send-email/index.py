@@ -40,7 +40,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     body_data = json.loads(body_str)
     
     name = body_data.get('name', '')
-    email = body_data.get('phone', '')
+    email = body_data.get('email', '')
     message = body_data.get('message', '')
     
     if not name or not email:
