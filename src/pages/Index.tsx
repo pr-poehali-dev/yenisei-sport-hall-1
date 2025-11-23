@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,21 @@ import { useToast } from '@/hooks/use-toast';
 const Index = () => {
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loginError, setLoginError] = useState('');
   const { toast } = useToast();
+
+  useEffect(() => {
+    const adminSession = localStorage.getItem('adminSession');
+    if (adminSession) {
+      const session = JSON.parse(adminSession);
+      if (session.expiresAt > Date.now()) {
+        setIsAdmin(true);
+      } else {
+        localStorage.removeItem('adminSession');
+      }
+    }
+  }, []);
 
   const sports = [
     {
@@ -88,11 +102,34 @@ const Index = () => {
 
   const handleAdminLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const login = formData.get('login') as string;
+    const password = formData.get('password') as string;
+
+    if (login === 'admin' && password === 'admin2025') {
+      const session = {
+        expiresAt: Date.now() + 24 * 60 * 60 * 1000
+      };
+      localStorage.setItem('adminSession', JSON.stringify(session));
+      setIsAdmin(true);
+      setIsAdminLoginOpen(false);
+      setLoginError('');
+      toast({
+        title: 'Вход выполнен',
+        description: 'Добро пожаловать, администратор!',
+      });
+    } else {
+      setLoginError('Неверный логин или пароль');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    localStorage.removeItem('adminSession');
+    setIsAdmin(false);
     toast({
-      title: 'Вход выполнен',
-      description: 'Добро пожаловать, администратор!',
+      title: 'Выход выполнен',
+      description: 'До свидания!',
     });
-    setIsAdminLoginOpen(false);
   };
 
   return (
@@ -103,11 +140,22 @@ const Index = () => {
             <h1 className="text-2xl md:text-4xl font-bold">
               Спортивный зал "Енисей"
             </h1>
-            <nav className="flex gap-6">
+            <nav className="flex gap-6 items-center">
               <a href="#sports" className="hover:underline hidden md:inline">Виды спорта</a>
               <a href="#feedback" className="hover:underline hidden md:inline">Обратная связь</a>
               <a href="#about" className="hover:underline hidden md:inline">О проекте</a>
               <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
+              {isAdmin && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleAdminLogout}
+                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                >
+                  <Icon name="LogOut" size={16} className="mr-2" />
+                  Выход
+                </Button>
+              )}
             </nav>
           </div>
         </div>
@@ -449,17 +497,18 @@ const Index = () => {
           </div>
           <Separator className="my-6 bg-primary-foreground/20" />
           <div className="text-center text-primary-foreground/80 text-sm space-y-4">
-            <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
-                >
-                  <Icon name="Lock" size={16} className="mr-2" />
-                  Вход для администратора
-                </Button>
-              </DialogTrigger>
+            {!isAdmin && (
+              <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
+                  >
+                    <Icon name="Lock" size={16} className="mr-2" />
+                    Вход для администратора
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Вход для администратора</DialogTitle>
@@ -468,10 +517,16 @@ const Index = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleAdminLogin} className="space-y-4">
+                  {loginError && (
+                    <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
+                      {loginError}
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="admin-login">Логин</Label>
                     <Input 
-                      id="admin-login" 
+                      id="admin-login"
+                      name="login"
                       type="text" 
                       placeholder="Введите логин" 
                       required 
@@ -480,7 +535,8 @@ const Index = () => {
                   <div className="space-y-2">
                     <Label htmlFor="admin-password">Пароль</Label>
                     <Input 
-                      id="admin-password" 
+                      id="admin-password"
+                      name="password"
                       type="password" 
                       placeholder="Введите пароль" 
                       required 
@@ -491,7 +547,8 @@ const Index = () => {
                   </Button>
                 </form>
               </DialogContent>
-            </Dialog>
+              </Dialog>
+            )}
             <p>© 2025 Спортивный зал. Все права защищены.</p>
             <div className="flex items-center justify-center gap-4">
               <a 
