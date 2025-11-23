@@ -452,8 +452,18 @@ const Index = () => {
             </div>
           </div>
           <Separator className="my-6 bg-primary-foreground/20" />
-          <div className="text-center text-primary-foreground/80 text-sm">
-            © 2025 Спортивный зал. Все права защищены.
+          <div className="text-center text-primary-foreground/80 text-sm space-y-2">
+            <p>© 2025 Спортивный зал. Все права защищены.</p>
+            <p>
+              <a 
+                href="https://www.krascsp.ru" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-primary-foreground underline"
+              >
+                www.krascsp.ru
+              </a>
+            </p>
           </div>
         </div>
       </footer>
