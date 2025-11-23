@@ -9,13 +9,22 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import AdminPanel from '@/components/AdminPanel';
 
 const Index = () => {
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
+  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loginError, setLoginError] = useState('');
   const { toast } = useToast();
+
+  const [contacts, setContacts] = useState({
+    address: 'г. Красноярск, о. Отдыха, 12',
+    phone: '+7 (391) 989-10-82',
+    email: 'mail@krascsp.ru',
+    hours: 'Ежедневно: 08:00 - 22:00'
+  });
 
   useEffect(() => {
     const adminSession = localStorage.getItem('adminSession');
@@ -29,7 +38,7 @@ const Index = () => {
     }
   }, []);
 
-  const sports = [
+  const [sports, setSports] = useState([
     {
       id: 'basketball',
       name: 'Баскетбол',
@@ -90,7 +99,7 @@ const Index = () => {
       ],
       video: 'https://rutube.ru/play/embed/b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7'
     }
-  ];
+  ]);
 
   const handleFeedbackSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -146,15 +155,26 @@ const Index = () => {
               <a href="#about" className="hover:underline hidden md:inline">О проекте</a>
               <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
               {isAdmin && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleAdminLogout}
-                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-                >
-                  <Icon name="LogOut" size={16} className="mr-2" />
-                  Выход
-                </Button>
+                <>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setIsAdminPanelOpen(true)}
+                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                  >
+                    <Icon name="Settings" size={16} className="mr-2" />
+                    Управление
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleAdminLogout}
+                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                  >
+                    <Icon name="LogOut" size={16} className="mr-2" />
+                    Выход
+                  </Button>
+                </>
               )}
             </nav>
           </div>
@@ -412,7 +432,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    г. Красноярск, о. Отдыха, 12
+                    {contacts.address}
                   </p>
                 </CardContent>
               </Card>
@@ -426,7 +446,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    +7 (391) 989-10-82
+                    {contacts.phone}
                   </p>
                 </CardContent>
               </Card>
@@ -440,7 +460,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    mail@krascsp.ru
+                    {contacts.email}
                   </p>
                 </CardContent>
               </Card>
@@ -454,7 +474,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Ежедневно: 08:00 - 22:00
+                    {contacts.hours}
                   </p>
                 </CardContent>
               </Card>
@@ -585,6 +605,15 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      <AdminPanel
+        isOpen={isAdminPanelOpen}
+        onClose={() => setIsAdminPanelOpen(false)}
+        contacts={contacts}
+        sports={sports}
+        onUpdateContacts={setContacts}
+        onUpdateSports={setSports}
+      />
     </div>
   );
 };
