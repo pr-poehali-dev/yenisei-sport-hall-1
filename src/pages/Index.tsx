@@ -95,9 +95,9 @@ const Index = () => {
             </h1>
             <nav className="flex gap-6">
               <a href="#sports" className="hover:underline hidden md:inline">Виды спорта</a>
-              <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
               <a href="#feedback" className="hover:underline hidden md:inline">Обратная связь</a>
               <a href="#about" className="hover:underline hidden md:inline">О проекте</a>
+              <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
             </nav>
           </div>
         </div>
