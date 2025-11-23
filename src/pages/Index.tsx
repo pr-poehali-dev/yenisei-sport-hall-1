@@ -103,7 +103,7 @@ const Index = () => {
         </div>
       </header>
 
-      <section className="py-12 pb-6 bg-gradient-to-b from-primary/10 to-background">
+      <section className="py-8 pb-4 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-4xl font-bold mb-6 text-foreground">
@@ -123,7 +123,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="sports" className="pt-8 pb-16 bg-background">
+      <section id="sports" className="pt-4 pb-12 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Классификатор игровых видов спорта
@@ -215,7 +215,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="contacts" className="pt-4 pb-16 bg-background">
+      <section id="contacts" className="pt-4 pb-12 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
@@ -304,7 +304,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="feedback" className="pt-8 pb-16 bg-primary/5">
+      <section id="feedback" className="pt-4 pb-12 bg-primary/5">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
@@ -346,7 +346,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="about" className="pt-8 pb-16 bg-background">
+      <section id="about" className="pt-4 pb-12 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
