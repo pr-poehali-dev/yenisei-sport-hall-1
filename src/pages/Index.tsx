@@ -166,6 +166,8 @@ const Index = () => {
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
 
+    console.log('Sending feedback:', { name, email, message });
+
     try {
       const response = await fetch('https://functions.poehali.dev/0df7b0be-d24f-4940-a122-87ceefd9b518', {
         method: 'POST',
@@ -178,6 +180,8 @@ const Index = () => {
           message
         })
       });
+
+      console.log('Response status:', response.status);
 
       if (!response.ok) {
         const data = await response.json();
@@ -194,6 +198,7 @@ const Index = () => {
       });
       generateCaptcha();
       e.currentTarget.reset();
+      setCaptchaInput('');
       if (isAdmin) {
         loadUnreadCount();
       }
@@ -201,7 +206,7 @@ const Index = () => {
       console.error('Send error:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось отправить сообщение. Попробуйте позже.',
+        description: error instanceof Error ? error.message : 'Не удалось отправить сообщение. Попробуйте позже.',
         variant: 'destructive'
       });
     }
