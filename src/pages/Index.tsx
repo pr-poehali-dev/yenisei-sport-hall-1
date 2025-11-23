@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
+  const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const { toast } = useToast();
 
   const sports = [
@@ -83,6 +84,15 @@ const Index = () => {
       title: 'Спасибо за отзыв!',
       description: 'Ваше сообщение успешно отправлено.',
     });
+  };
+
+  const handleAdminLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    toast({
+      title: 'Вход выполнен',
+      description: 'Добро пожаловать, администратор!',
+    });
+    setIsAdminLoginOpen(false);
   };
 
   return (
@@ -438,7 +448,50 @@ const Index = () => {
             </div>
           </div>
           <Separator className="my-6 bg-primary-foreground/20" />
-          <div className="text-center text-primary-foreground/80 text-sm space-y-3">
+          <div className="text-center text-primary-foreground/80 text-sm space-y-4">
+            <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
+                >
+                  <Icon name="Lock" size={16} className="mr-2" />
+                  Вход для администратора
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Вход для администратора</DialogTitle>
+                  <DialogDescription>
+                    Введите логин и пароль для доступа к панели управления
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleAdminLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="admin-login">Логин</Label>
+                    <Input 
+                      id="admin-login" 
+                      type="text" 
+                      placeholder="Введите логин" 
+                      required 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="admin-password">Пароль</Label>
+                    <Input 
+                      id="admin-password" 
+                      type="password" 
+                      placeholder="Введите пароль" 
+                      required 
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Войти
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
             <p>© 2025 Спортивный зал. Все права защищены.</p>
             <div className="flex items-center justify-center gap-4">
               <a 
