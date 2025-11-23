@@ -103,37 +103,13 @@ const Index = () => {
 
       <section className="py-12 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto mb-12">
+          <div className="text-center max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground">
               Добро пожаловать в мир спорта
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8">
               Информационный ресурс о спортивном зале с правилами игр и техникой безопасности
             </p>
-          </div>
-
-          <div className="flex flex-wrap justify-center items-center gap-8 mb-12">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <img 
-                src="https://cdn.poehali.dev/files/11fb222f-f292-45b6-b061-c6ef8a66ca3f.jpg" 
-                alt="Министерство спорта РФ" 
-                className="h-20 w-auto object-contain"
-              />
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <img 
-                src="https://cdn.poehali.dev/files/ae844b63-609e-478e-84dd-abf5793ff926.jpg" 
-                alt="Правительство Красноярского края" 
-                className="h-20 w-auto object-contain"
-              />
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <img 
-                src="https://cdn.poehali.dev/files/f666dfc0-c8e3-41d2-a8be-930a4a3d03c7.jpg" 
-                alt="Министерство спорта Красноярского края" 
-                className="h-20 w-auto object-contain"
-              />
-            </div>
           </div>
         </div>
       </section>
