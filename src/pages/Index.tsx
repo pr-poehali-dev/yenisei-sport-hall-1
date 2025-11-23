@@ -123,9 +123,8 @@ const Index = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
-    const phone = formData.get('phone') as string;
+    const email = formData.get('email') as string;
     const message = formData.get('message') as string;
-    const sport = selectedSport ? sports.find(s => s.id === selectedSport)?.name : '';
 
     try {
       const response = await fetch('https://functions.poehali.dev/0df7b0be-d24f-4940-a122-87ceefd9b518', {
@@ -135,8 +134,7 @@ const Index = () => {
         },
         body: JSON.stringify({
           name,
-          phone,
-          sport,
+          phone: email,
           message
         })
       });
@@ -363,8 +361,8 @@ const Index = () => {
                     <Input id="name" name="name" placeholder="Введите ваше имя" required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Телефон</Label>
-                    <Input id="phone" name="phone" type="tel" placeholder="+7 (___) ___-__-__" required />
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" name="email" type="email" placeholder="example@mail.ru" required />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="message">Сообщение</Label>

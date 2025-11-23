@@ -42,18 +42,17 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     body_data = json.loads(body_str)
     
     name = body_data.get('name', '')
-    phone = body_data.get('phone', '')
-    sport = body_data.get('sport', '')
+    email = body_data.get('phone', '')
     message = body_data.get('message', '')
     
-    if not name or not phone:
+    if not name or not email:
         return {
             'statusCode': 400,
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            'body': json.dumps({'error': 'Name and phone are required'})
+            'body': json.dumps({'error': 'Name and email are required'})
         }
     
     smtp_host = os.environ.get('SMTP_HOST')
@@ -81,8 +80,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     Получена новая заявка с сайта:
     
     Имя: {name}
-    Телефон: {phone}
-    Вид спорта: {sport if sport else 'Не указан'}
+    Email: {email}
     
     Сообщение:
     {message if message else 'Не указано'}
