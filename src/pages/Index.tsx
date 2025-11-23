@@ -161,7 +161,8 @@ const Index = () => {
       return;
     }
     
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
@@ -197,7 +198,7 @@ const Index = () => {
         description: 'Ваше сообщение отправлено администратору',
       });
       generateCaptcha();
-      e.currentTarget.reset();
+      form.reset();
       setCaptchaInput('');
       if (isAdmin) {
         loadUnreadCount();
