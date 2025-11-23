@@ -17,6 +17,8 @@ const Index = () => {
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, answer: 0 });
+  const [captchaInput, setCaptchaInput] = useState('');
   const { toast } = useToast();
 
   const [contacts, setContacts] = useState({
@@ -54,7 +56,16 @@ const Index = () => {
         localStorage.removeItem('adminSession');
       }
     }
+    
+    generateCaptcha();
   }, []);
+
+  const generateCaptcha = () => {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    setCaptcha({ num1, num2, answer: num1 + num2 });
+    setCaptchaInput('');
+  };
 
   const [sports, setSports] = useState([
     {
@@ -121,6 +132,17 @@ const Index = () => {
 
   const handleFeedbackSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (parseInt(captchaInput) !== captcha.answer) {
+      toast({
+        title: 'Ошибка',
+        description: 'Неверный ответ на вопрос. Попробуйте снова.',
+        variant: 'destructive'
+      });
+      generateCaptcha();
+      return;
+    }
+    
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
@@ -145,6 +167,7 @@ const Index = () => {
           description: 'Ваше сообщение успешно отправлено на shav@krascsp.ru',
         });
         e.currentTarget.reset();
+        generateCaptcha();
       } else {
         throw new Error('Failed to send');
       }
@@ -371,6 +394,20 @@ const Index = () => {
                       name="message" 
                       placeholder="Ваш отзыв или предложение" 
                       rows={5}
+                      required 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="captcha" className="flex items-center gap-2">
+                      <Icon name="Shield" size={18} className="text-primary" />
+                      Проверка: Сколько будет {captcha.num1} + {captcha.num2}?
+                    </Label>
+                    <Input 
+                      id="captcha" 
+                      type="number" 
+                      placeholder="Введите ответ"
+                      value={captchaInput}
+                      onChange={(e) => setCaptchaInput(e.target.value)}
                       required 
                     />
                   </div>
