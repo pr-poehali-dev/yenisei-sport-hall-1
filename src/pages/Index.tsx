@@ -448,7 +448,6 @@ const Index = () => {
               <ul className="space-y-2 text-primary-foreground/80 text-sm">
                 <li>Министерство спорта РФ</li>
                 <li>Правительство Красноярского края</li>
-                <li>Нацпроект «Демография»</li>
               </ul>
             </div>
           </div>
