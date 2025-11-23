@@ -215,95 +215,6 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="contacts" className="pt-4 pb-12 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Контакты
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="MapPin" size={24} className="text-primary" />
-                    Адрес
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    г. Красноярск, о. Отдыха, 12
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="Phone" size={24} className="text-primary" />
-                    Телефон
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    +7 (391) 989-10-82
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="Mail" size={24} className="text-primary" />
-                    Email
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    mail@krascsp.ru
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="Clock" size={24} className="text-primary" />
-                    Режим работы
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    Ежедневно: 08:00 - 22:00
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Icon name="Map" size={24} className="text-primary" />
-                  Как нас найти
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="w-full h-[400px]">
-                  <iframe 
-                    src="https://yandex.ru/map-widget/v1/?ll=92.869907%2C55.995616&z=17&l=map&pt=92.869907,55.995616,pm2rdm"
-                    width="100%" 
-                    height="400" 
-                    frameBorder="0"
-                    allowFullScreen={true}
-                    className="border-0"
-                  ></iframe>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       <section id="feedback" className="pt-4 pb-12 bg-primary/5">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
@@ -422,6 +333,95 @@ const Index = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+          </div>
+        </div>
+      </section>
+
+      <section id="contacts" className="pt-4 pb-12 bg-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+              Контакты
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="MapPin" size={24} className="text-primary" />
+                    Адрес
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    г. Красноярск, о. Отдыха, 12
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="Phone" size={24} className="text-primary" />
+                    Телефон
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    +7 (391) 989-10-82
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="Mail" size={24} className="text-primary" />
+                    Email
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    mail@krascsp.ru
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="Clock" size={24} className="text-primary" />
+                    Режим работы
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Ежедневно: 08:00 - 22:00
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card className="overflow-hidden">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="Map" size={24} className="text-primary" />
+                  Как нас найти
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="w-full h-[400px]">
+                  <iframe 
+                    src="https://yandex.ru/map-widget/v1/?ll=92.869907%2C55.995616&z=17&l=map&pt=92.869907,55.995616,pm2rdm"
+                    width="100%" 
+                    height="400" 
+                    frameBorder="0"
+                    allowFullScreen={true}
+                    className="border-0"
+                  ></iframe>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
