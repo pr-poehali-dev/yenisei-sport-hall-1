@@ -93,6 +93,7 @@ const Index = () => {
             <h1 className="text-2xl md:text-3xl font-bold">Спортивный зал</h1>
             <nav className="flex gap-6">
               <a href="#sports" className="hover:underline hidden md:inline">Виды спорта</a>
+              <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
               <a href="#feedback" className="hover:underline hidden md:inline">Обратная связь</a>
               <a href="#about" className="hover:underline hidden md:inline">О проекте</a>
             </nav>
@@ -225,6 +226,79 @@ const Index = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="contacts" className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+              Контакты
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="MapPin" size={24} className="text-primary" />
+                    Адрес
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Красноярский край<br />
+                    г. Красноярск<br />
+                    ул. Спортивная, д. 1
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="Phone" size={24} className="text-primary" />
+                    Телефон
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    +7 (391) 123-45-67<br />
+                    +7 (391) 123-45-68
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="Mail" size={24} className="text-primary" />
+                    Email
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    info@sportshall.ru<br />
+                    booking@sportshall.ru
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Icon name="Clock" size={24} className="text-primary" />
+                    Режим работы
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Пн-Пт: 08:00 - 22:00<br />
+                    Сб-Вс: 09:00 - 21:00
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
