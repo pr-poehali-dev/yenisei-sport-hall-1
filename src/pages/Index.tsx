@@ -58,7 +58,7 @@ const Index = () => {
     {
       id: 'futsal',
       name: 'Мини-футбол',
-      image: 'https://cdn.poehali.dev/projects/a9506489-63c9-42b2-9de9-54615ceeaf14/files/a81ec216-b3dc-426d-bb6d-1824927ff897.jpg',
+      image: 'https://cdn.poehali.dev/files/6c27196a-5bd3-4d6e-ae3c-247391012530.jpg',
       rules: [
         'Игра состоит из 2 таймов по 20 минут',
         'Команда состоит из 5 игроков (4 полевых + вратарь)',
