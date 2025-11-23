@@ -126,7 +126,7 @@ const Index = () => {
       <section id="sports" className="pt-4 pb-12 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Классификатор игровых видов спорта
+            Игровые виды спорта в нашем зале
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
