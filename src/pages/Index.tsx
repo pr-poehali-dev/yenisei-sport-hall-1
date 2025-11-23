@@ -104,7 +104,7 @@ const Index = () => {
       <section className="py-12 bg-gradient-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground">
+            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-foreground">
               Бизнес-спринт (Я выбираю спорт)
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8">
