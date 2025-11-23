@@ -166,8 +166,8 @@ const Index = () => {
           title: 'Спасибо за отзыв!',
           description: 'Ваше сообщение успешно отправлено на shav@krascsp.ru',
         });
-        e.currentTarget.reset();
         generateCaptcha();
+        e.currentTarget.reset();
       } else {
         throw new Error('Failed to send');
       }
