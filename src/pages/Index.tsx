@@ -352,12 +352,12 @@ const Index = () => {
       </section>
 
       <section id="sports" className="pt-4 pb-6 bg-background">
-        <div className="container mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Игровые виды спорта в нашем зале
           </h2>
 
-          <div className="grid grid-cols-5 gap-4 mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-12">
             {sports.map((sport) => (
               <Card key={sport.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover-scale">
                 <div className="h-32 overflow-hidden">
