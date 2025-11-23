@@ -190,7 +190,7 @@ const Index = () => {
 
       toast({
         title: 'Спасибо за отзыв!',
-        description: 'Ваше сообщение успешно отправлено на shav@krascsp.ru',
+        description: 'Ваше сообщение отправлено администратору',
       });
       generateCaptcha();
       e.currentTarget.reset();
