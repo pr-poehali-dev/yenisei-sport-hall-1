@@ -53,7 +53,7 @@ const Index = () => {
         'Разминка перед игрой обязательна',
         'Соблюдайте дистанцию при бросках'
       ],
-      video: 'https://www.youtube.com/embed/example'
+      video: 'https://rutube.ru/play/embed/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6'
     },
     {
       id: 'futsal',
@@ -73,7 +73,7 @@ const Index = () => {
         'Не играйте в мокрой обуви',
         'Соблюдайте правила честной игры'
       ],
-      video: 'https://www.youtube.com/embed/example'
+      video: 'https://rutube.ru/play/embed/b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7'
     }
   ];
 
