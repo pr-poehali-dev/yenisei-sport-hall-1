@@ -223,9 +223,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Красноярский край<br />
-                    г. Красноярск<br />
-                    ул. Спортивная, д. 1
+                    г. Красноярск, о. Отдыха, 12
                   </p>
                 </CardContent>
               </Card>
