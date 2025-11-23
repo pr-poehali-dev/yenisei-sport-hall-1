@@ -179,7 +179,10 @@ const Index = () => {
         })
       });
 
-      if (response.ok) {
+      const data = await response.json();
+      console.log('Response:', response.status, data);
+
+      if (response.ok && data.success) {
         toast({
           title: 'Спасибо за отзыв!',
           description: 'Ваше сообщение успешно отправлено на shav@krascsp.ru',
@@ -190,9 +193,10 @@ const Index = () => {
           loadUnreadCount();
         }
       } else {
-        throw new Error('Failed to send');
+        throw new Error(data.error || 'Failed to send');
       }
     } catch (error) {
+      console.error('Send error:', error);
       toast({
         title: 'Ошибка',
         description: 'Не удалось отправить сообщение. Попробуйте позже.',

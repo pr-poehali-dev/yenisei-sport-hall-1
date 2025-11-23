@@ -69,7 +69,15 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             cur.close()
             conn.close()
         except Exception as e:
-            pass
+            print(f'DB error: {str(e)}')
+            return {
+                'statusCode': 500,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                'body': json.dumps({'success': False, 'error': f'Database error: {str(e)}'})
+            }
     
     smtp_host = os.environ.get('SMTP_HOST')
     smtp_port = int(os.environ.get('SMTP_PORT', '465'))
