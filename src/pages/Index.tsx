@@ -179,21 +179,23 @@ const Index = () => {
         })
       });
 
-      const data = await response.json();
-      console.log('Response:', response.status, data);
+      if (!response.ok) {
+        const data = await response.json();
+        console.error('Error response:', response.status, data);
+        throw new Error(data.error || 'Server error');
+      }
 
-      if (response.ok && data.success) {
-        toast({
-          title: 'Спасибо за отзыв!',
-          description: 'Ваше сообщение успешно отправлено на shav@krascsp.ru',
-        });
-        generateCaptcha();
-        e.currentTarget.reset();
-        if (isAdmin) {
-          loadUnreadCount();
-        }
-      } else {
-        throw new Error(data.error || 'Failed to send');
+      const data = await response.json();
+      console.log('Success response:', response.status, data);
+
+      toast({
+        title: 'Спасибо за отзыв!',
+        description: 'Ваше сообщение успешно отправлено на shav@krascsp.ru',
+      });
+      generateCaptcha();
+      e.currentTarget.reset();
+      if (isAdmin) {
+        loadUnreadCount();
       }
     } catch (error) {
       console.error('Send error:', error);
