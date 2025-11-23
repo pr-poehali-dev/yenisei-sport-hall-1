@@ -386,11 +386,16 @@ const Index = () => {
                             <Icon name="Video" size={24} className="text-primary" />
                             Видео-инструкция
                           </h3>
-                          <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                            <div className="text-center">
-                              <Icon name="PlayCircle" size={64} className="text-muted-foreground mx-auto mb-2" />
-                              <p className="text-muted-foreground">Видео-инструкция будет добавлена</p>
-                            </div>
+                          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                            <iframe
+                              src={sport.video}
+                              width="100%"
+                              height="100%"
+                              frameBorder="0"
+                              allow="clipboard-write; autoplay"
+                              allowFullScreen
+                              className="w-full h-full"
+                            ></iframe>
                           </div>
                         </div>
                       </div>
