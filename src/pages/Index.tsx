@@ -304,7 +304,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="feedback" className="py-16 bg-primary/5">
+      <section id="feedback" className="pt-8 pb-16 bg-primary/5">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
@@ -346,7 +346,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="about" className="py-16 bg-background">
+      <section id="about" className="pt-8 pb-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
