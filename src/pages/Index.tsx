@@ -85,7 +85,7 @@ const Index = () => {
     }
   };
 
-  const [sports] = useState([
+  const [sports, setSports] = useState([
     {
       id: 'basketball',
       name: 'Баскетбол',
