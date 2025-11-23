@@ -123,7 +123,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="sports" className="pt-4 pb-12 bg-background">
+      <section id="sports" className="pt-4 pb-6 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Игровые виды спорта в нашем зале
