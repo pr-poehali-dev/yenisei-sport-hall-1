@@ -428,24 +428,10 @@ const Index = () => {
 
       <footer className="bg-primary text-primary-foreground py-8 mt-16">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="flex justify-center">
             <div>
-              <h3 className="text-xl font-bold mb-4">Спортивный зал</h3>
-              <p className="text-primary-foreground/80">
-                Информационный ресурс о спортивных играх
-              </p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Разделы</h4>
-              <ul className="space-y-2 text-primary-foreground/80">
-                <li><a href="#sports" className="hover:text-primary-foreground">Виды спорта</a></li>
-                <li><a href="#feedback" className="hover:text-primary-foreground">Обратная связь</a></li>
-                <li><a href="#about" className="hover:text-primary-foreground">О проекте</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Поддержка проекта</h4>
-              <ul className="space-y-2 text-primary-foreground/80 text-sm">
+              <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
+              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>Министерство спорта РФ</li>
                 <li>Правительство Красноярского края</li>
               </ul>
