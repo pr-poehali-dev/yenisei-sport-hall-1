@@ -39,20 +39,66 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
   const [editedSports, setEditedSports] = useState(sports);
   const { toast } = useToast();
 
-  const handleSaveContacts = () => {
-    onUpdateContacts(editedContacts);
-    toast({
-      title: 'Контакты обновлены',
-      description: 'Изменения успешно сохранены',
-    });
+  const handleSaveContacts = async () => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'contacts',
+          data: editedContacts
+        })
+      });
+      
+      if (response.ok) {
+        onUpdateContacts(editedContacts);
+        toast({
+          title: 'Контакты обновлены',
+          description: 'Изменения успешно сохранены в базе данных',
+        });
+      } else {
+        throw new Error('Failed to save');
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось сохранить изменения',
+        variant: 'destructive'
+      });
+    }
   };
 
-  const handleSaveSports = () => {
-    onUpdateSports(editedSports);
-    toast({
-      title: 'Виды спорта обновлены',
-      description: 'Изменения успешно сохранены',
-    });
+  const handleSaveSports = async () => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'sports',
+          data: editedSports
+        })
+      });
+      
+      if (response.ok) {
+        onUpdateSports(editedSports);
+        toast({
+          title: 'Виды спорта обновлены',
+          description: 'Изменения успешно сохранены в базе данных',
+        });
+      } else {
+        throw new Error('Failed to save');
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось сохранить изменения',
+        variant: 'destructive'
+      });
+    }
   };
 
   const updateSportField = (index: number, field: keyof Sport, value: string | string[]) => {

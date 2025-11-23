@@ -27,6 +27,24 @@ const Index = () => {
   });
 
   useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b');
+        const data = await response.json();
+        
+        if (data.contacts) {
+          setContacts(data.contacts);
+        }
+        if (data.sports) {
+          setSports(data.sports);
+        }
+      } catch (error) {
+        console.error('Failed to load content:', error);
+      }
+    };
+    
+    loadContent();
+    
     const adminSession = localStorage.getItem('adminSession');
     if (adminSession) {
       const session = JSON.parse(adminSession);
