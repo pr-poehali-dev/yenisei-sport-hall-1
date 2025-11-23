@@ -253,8 +253,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    info@sportshall.ru<br />
-                    booking@sportshall.ru
+                    mail@krascsp.ru
                   </p>
                 </CardContent>
               </Card>
