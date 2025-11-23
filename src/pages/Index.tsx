@@ -267,8 +267,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Пн-Пт: 08:00 - 22:00<br />
-                    Сб-Вс: 09:00 - 21:00
+                    Ежедневно: 08:00 - 22:00
                   </p>
                 </CardContent>
               </Card>
