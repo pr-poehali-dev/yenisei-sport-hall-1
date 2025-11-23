@@ -90,7 +90,7 @@ const Index = () => {
       <header className="bg-primary text-primary-foreground py-6 sticky top-0 z-50 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl md:text-3xl font-bold">Спортивный зал "Енисей"</h1>
+            <h1 className="text-xl md:text-2xl font-bold">Спортивный зал "Енисей"</h1>
             <nav className="flex gap-6">
               <a href="#sports" className="hover:underline hidden md:inline">Виды спорта</a>
               <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
