@@ -357,9 +357,9 @@ const Index = () => {
             Игровые виды спорта в нашем зале
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-12">
+          <div className="flex overflow-x-auto gap-4 mb-12 pb-4 snap-x snap-mandatory">
             {sports.map((sport) => (
-              <Card key={sport.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover-scale">
+              <Card key={sport.id} className="flex-shrink-0 w-56 overflow-hidden hover:shadow-xl transition-all duration-300 hover-scale snap-center">
                 <div className="h-32 overflow-hidden">
                   <img 
                     src={sport.image} 
