@@ -261,7 +261,20 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
                     <Input
                       value={sport.video}
                       onChange={(e) => updateSportField(sportIndex, 'video', e.target.value)}
+                      placeholder="https://rutube.ru/play/embed/..."
                     />
+                    {sport.video && (
+                      <div className="mt-2 rounded-lg overflow-hidden border">
+                        <iframe
+                          src={sport.video}
+                          width="100%"
+                          height="300"
+                          allow="clipboard-write; autoplay"
+                          allowFullScreen
+                          className="w-full"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-2">
