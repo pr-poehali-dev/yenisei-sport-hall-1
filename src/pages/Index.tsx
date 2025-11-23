@@ -33,7 +33,7 @@ const Index = () => {
         'Соблюдайте правила игры и не допускайте грубых столкновений',
         'При получении травмы немедленно обратитесь к медперсоналу'
       ],
-      video: 'https://www.youtube.com/embed/example'
+      video: 'https://rutube.ru/play/embed/8446c8876591ad39269db4c75cbc11c2'
     },
     {
       id: 'handball',
