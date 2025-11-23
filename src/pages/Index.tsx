@@ -215,7 +215,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="contacts" className="pt-8 pb-16 bg-background">
+      <section id="contacts" className="pt-4 pb-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
