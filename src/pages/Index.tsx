@@ -507,28 +507,25 @@ const Index = () => {
       <footer className="bg-primary text-primary-foreground py-8 mt-16">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
-            <div>
+            <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>Министерство спорта РФ</li>
                 <li>Правительство Красноярского края</li>
               </ul>
-            </div>
-          </div>
-          <Separator className="my-6 bg-primary-foreground/20" />
-          <div className="text-center text-primary-foreground/80 text-sm space-y-4">
-            {!isAdmin && (
-              <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
-                  >
-                    <Icon name="Lock" size={16} className="mr-2" />
-                    Вход для администратора
-                  </Button>
-                </DialogTrigger>
+              {!isAdmin && (
+                <div className="flex justify-center pt-2">
+                  <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
+                    <DialogTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
+                      >
+                        <Icon name="Lock" size={16} className="mr-2" />
+                        Вход для администратора
+                      </Button>
+                    </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Вход для администратора</DialogTitle>
@@ -567,8 +564,13 @@ const Index = () => {
                   </Button>
                 </form>
               </DialogContent>
-              </Dialog>
-            )}
+                  </Dialog>
+                </div>
+              )}
+            </div>
+          </div>
+          <Separator className="my-6 bg-primary-foreground/20" />
+          <div className="text-center text-primary-foreground/80 text-sm space-y-4">
             <p>© 2025 Спортивный зал. Все права защищены.</p>
             <div className="flex items-center justify-center gap-4">
               <a 
