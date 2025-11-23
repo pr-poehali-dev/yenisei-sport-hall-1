@@ -19,6 +19,7 @@ const Index = () => {
   const [loginError, setLoginError] = useState('');
   const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, answer: 0 });
   const [captchaInput, setCaptchaInput] = useState('');
+  const [unreadCount, setUnreadCount] = useState(0);
   const { toast } = useToast();
 
   const [contacts, setContacts] = useState({
@@ -58,13 +59,30 @@ const Index = () => {
     }
     
     generateCaptcha();
-  }, []);
+    
+    if (isAdmin) {
+      loadUnreadCount();
+      const interval = setInterval(loadUnreadCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [isAdmin]);
 
   const generateCaptcha = () => {
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 10) + 1;
     setCaptcha({ num1, num2, answer: num1 + num2 });
     setCaptchaInput('');
+  };
+
+  const loadUnreadCount = async () => {
+    if (!isAdmin) return;
+    try {
+      const response = await fetch('https://functions.poehali.dev/9f020406-6628-478f-ada2-5920d21f64b2');
+      const data = await response.json();
+      setUnreadCount(data.total_count || 0);
+    } catch (error) {
+      console.error('Failed to load unread count:', error);
+    }
   };
 
   const [sports, setSports] = useState([
@@ -168,6 +186,9 @@ const Index = () => {
         });
         generateCaptcha();
         e.currentTarget.reset();
+        if (isAdmin) {
+          loadUnreadCount();
+        }
       } else {
         throw new Error('Failed to send');
       }
@@ -194,6 +215,7 @@ const Index = () => {
       setIsAdmin(true);
       setIsAdminLoginOpen(false);
       setLoginError('');
+      loadUnreadCount();
       toast({
         title: 'Вход выполнен',
         description: 'Добро пожаловать, администратор!',
@@ -231,10 +253,15 @@ const Index = () => {
                     variant="outline" 
                     size="sm" 
                     onClick={() => setIsAdminPanelOpen(true)}
-                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 relative"
                   >
                     <Icon name="Settings" size={16} className="mr-2" />
                     Управление
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+                        {unreadCount}
+                      </span>
+                    )}
                   </Button>
                   <Button 
                     variant="outline" 
