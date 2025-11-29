@@ -725,7 +725,16 @@ const Index = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
-                <li>Министерство спорта РФ</li>
+                <li>
+                  <a 
+                    href="https://minsport.gov.ru/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Министерство спорта РФ
+                  </a>
+                </li>
                 <li>Правительство Красноярского края</li>
               </ul>
             </div>
