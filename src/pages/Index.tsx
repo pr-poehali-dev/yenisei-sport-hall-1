@@ -755,6 +755,16 @@ const Index = () => {
                     Правительство Красноярского края
                   </a>
                 </li>
+                <li>
+                  <a 
+                    href="https://proekty.er.ru/projects/detskii-sport" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Партия Единая Россия
+                  </a>
+                </li>
               </ul>
             </div>
 
