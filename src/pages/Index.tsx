@@ -735,7 +735,16 @@ const Index = () => {
                     Министерство спорта РФ
                   </a>
                 </li>
-                <li>Правительство Красноярского края</li>
+                <li>
+                  <a 
+                    href="http://www.krskstate.ru/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Правительство Красноярского края
+                  </a>
+                </li>
               </ul>
             </div>
 
