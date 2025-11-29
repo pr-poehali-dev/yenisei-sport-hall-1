@@ -82,11 +82,13 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             }
     
     if method == 'POST':
-        body = event.get('body', '')
+        body_raw = event.get('body', '')
         is_base64 = event.get('isBase64Encoded', False)
         
         if is_base64:
-            body = base64.b64decode(body).decode('utf-8')
+            body_bytes = base64.b64decode(body_raw)
+        else:
+            body_bytes = body_raw.encode('latin-1')
         
         content_type = event.get('headers', {}).get('content-type', '')
         
@@ -100,18 +102,20 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'body': json.dumps({'error': 'Content-Type must be multipart/form-data'})
             }
         
-        boundary = content_type.split('boundary=')[1]
-        parts = body.split(f'--{boundary}')
+        boundary = content_type.split('boundary=')[1].encode('latin-1')
+        parts = body_bytes.split(b'--' + boundary)
         
         doc_type = None
         file_data = None
         
         for part in parts:
-            if 'name="docType"' in part:
-                doc_type = part.split('\r\n\r\n')[1].split('\r\n')[0]
-            elif 'name="file"' in part and 'filename=' in part:
-                file_content = part.split('\r\n\r\n', 1)[1].rsplit('\r\n', 1)[0]
-                file_data = file_content.encode('latin-1')
+            try:
+                if b'name="docType"' in part:
+                    doc_type = part.split(b'\r\n\r\n')[1].split(b'\r\n')[0].decode('utf-8')
+                elif b'name="file"' in part and b'filename=' in part:
+                    file_data = part.split(b'\r\n\r\n', 1)[1].rsplit(b'\r\n', 1)[0]
+            except:
+                continue
         
         if not doc_type or not file_data:
             return {
