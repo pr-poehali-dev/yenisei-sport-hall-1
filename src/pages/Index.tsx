@@ -709,6 +709,16 @@ const Index = () => {
                     Перечень льготников
                   </a>
                 </li>
+                <li>
+                  <a 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=schedule" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Расписание
+                  </a>
+                </li>
               </ul>
             </div>
 

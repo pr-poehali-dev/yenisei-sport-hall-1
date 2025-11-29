@@ -41,7 +41,8 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
   const [uploadStatus, setUploadStatus] = useState<Record<string, 'idle' | 'uploading' | 'success' | 'error'>>({
     rules: 'idle',
     prices: 'idle',
-    benefits: 'idle'
+    benefits: 'idle',
+    schedule: 'idle'
   });
   const { toast } = useToast();
 
@@ -373,6 +374,25 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
                         <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
                       )}
                       {uploadStatus.benefits === 'success' && (
+                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="schedule-doc">Расписание</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="schedule-doc"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleDocumentUpload(e, 'schedule')}
+                        className="flex-1"
+                      />
+                      {uploadStatus.schedule === 'uploading' && (
+                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
+                      )}
+                      {uploadStatus.schedule === 'success' && (
                         <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
                       )}
                     </div>
