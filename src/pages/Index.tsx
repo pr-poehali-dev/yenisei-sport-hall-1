@@ -675,7 +675,7 @@ const Index = () => {
 
       <footer className="bg-primary text-primary-foreground py-8 mt-16">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Информация</h4>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
@@ -711,66 +711,74 @@ const Index = () => {
                 </li>
               </ul>
             </div>
-            
+
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
+              <div className="flex justify-center mb-4">
+                <img 
+                  src="https://cdn.poehali.dev/projects/a9506489-63c9-42b2-9de9-54615ceeaf14/files/e4633664-3bee-4141-92c6-ed645b1c4857.jpg" 
+                  alt="Спорт - норма жизни" 
+                  className="h-20 w-auto object-contain"
+                />
+              </div>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>Министерство спорта РФ</li>
                 <li>Правительство Красноярского края</li>
               </ul>
+            </div>
+
+            <div className="space-y-4 flex items-center justify-center">
               {!isAdmin && (
-                <div className="flex justify-center pt-2">
-                  <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
-                    <DialogTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
-                      >
-                        <Icon name="Lock" size={16} className="mr-2" />
-                        Вход для администратора
+                <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
+                    >
+                      <Icon name="Lock" size={16} className="mr-2" />
+                      Вход для администратора
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Вход для администратора</DialogTitle>
+                      <DialogDescription>
+                        Введите логин и пароль для доступа к панели управления
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleAdminLogin} className="space-y-4">
+                      {loginError && (
+                        <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
+                          {loginError}
+                        </div>
+                      )}
+                      <div className="space-y-2">
+                        <Label htmlFor="admin-login">Логин</Label>
+                        <Input 
+                          id="admin-login"
+                          name="login"
+                          type="text" 
+                          placeholder="Введите логин" 
+                          required 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="admin-password">Пароль</Label>
+                        <Input 
+                          id="admin-password"
+                          name="password"
+                          type="password" 
+                          placeholder="Введите пароль" 
+                          required 
+                        />
+                      </div>
+                      <Button type="submit" className="w-full">
+                        Войти
                       </Button>
-                    </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Вход для администратора</DialogTitle>
-                  <DialogDescription>
-                    Введите логин и пароль для доступа к панели управления
-                  </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleAdminLogin} className="space-y-4">
-                  {loginError && (
-                    <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
-                      {loginError}
-                    </div>
-                  )}
-                  <div className="space-y-2">
-                    <Label htmlFor="admin-login">Логин</Label>
-                    <Input 
-                      id="admin-login"
-                      name="login"
-                      type="text" 
-                      placeholder="Введите логин" 
-                      required 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="admin-password">Пароль</Label>
-                    <Input 
-                      id="admin-password"
-                      name="password"
-                      type="password" 
-                      placeholder="Введите пароль" 
-                      required 
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Войти
-                  </Button>
-                </form>
-              </DialogContent>
-                  </Dialog>
-                </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               )}
             </div>
           </div>
