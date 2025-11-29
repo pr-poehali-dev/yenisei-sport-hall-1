@@ -302,14 +302,9 @@ const Index = () => {
               {!isAdmin && (
                 <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
                   <DialogTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-                    >
-                      <Icon name="Lock" size={16} className="mr-2" />
+                    <button className="hover:underline hidden md:inline cursor-pointer">
                       Вход
-                    </Button>
+                    </button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
