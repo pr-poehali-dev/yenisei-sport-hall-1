@@ -164,6 +164,46 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
     setEditedSports(updated);
   };
 
+  const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>, docType: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      toast({
+        title: 'Ошибка',
+        description: 'Можно загружать только PDF файлы',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('docType', docType);
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        toast({
+          title: 'Документ загружен',
+          description: `Файл ${file.name} успешно загружен`,
+        });
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось загрузить документ',
+        variant: 'destructive'
+      });
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -178,9 +218,10 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         </DialogHeader>
 
         <Tabs defaultValue="contacts" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="contacts">Контакты</TabsTrigger>
             <TabsTrigger value="sports">Виды спорта</TabsTrigger>
+            <TabsTrigger value="documents">Документы</TabsTrigger>
             <TabsTrigger value="feedback">
               Сообщения ({feedbackStats?.total_count || 0})
             </TabsTrigger>
@@ -230,6 +271,51 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
                   <Icon name="Save" size={16} className="mr-2" />
                   Сохранить изменения
                 </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="documents" className="space-y-4 mt-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Управление документами</CardTitle>
+                <CardDescription>Загрузите PDF файлы для информационных ссылок</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="rules-doc">Правила посещения</Label>
+                    <Input
+                      id="rules-doc"
+                      type="file"
+                      accept=".pdf"
+                      onChange={(e) => handleDocumentUpload(e, 'rules')}
+                    />
+                    <p className="text-sm text-muted-foreground">Текущий файл: rules.pdf</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="prices-doc">Прейскурант цен</Label>
+                    <Input
+                      id="prices-doc"
+                      type="file"
+                      accept=".pdf"
+                      onChange={(e) => handleDocumentUpload(e, 'prices')}
+                    />
+                    <p className="text-sm text-muted-foreground">Текущий файл: prices.pdf</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="benefits-doc">Перечень льготников</Label>
+                    <Input
+                      id="benefits-doc"
+                      type="file"
+                      accept=".pdf"
+                      onChange={(e) => handleDocumentUpload(e, 'benefits')}
+                    />
+                    <p className="text-sm text-muted-foreground">Текущий файл: benefits.pdf</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
