@@ -299,6 +299,58 @@ const Index = () => {
               <a href="#feedback" className="hover:underline hidden md:inline">Обратная связь</a>
               <a href="#about" className="hover:underline hidden md:inline">О проекте</a>
               <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
+              {!isAdmin && (
+                <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                    >
+                      <Icon name="Lock" size={16} className="mr-2" />
+                      Вход
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Вход для администратора</DialogTitle>
+                      <DialogDescription>
+                        Введите логин и пароль для доступа к панели управления
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleAdminLogin} className="space-y-4">
+                      {loginError && (
+                        <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
+                          {loginError}
+                        </div>
+                      )}
+                      <div className="space-y-2">
+                        <Label htmlFor="admin-login">Логин</Label>
+                        <Input 
+                          id="admin-login"
+                          name="login"
+                          type="text" 
+                          placeholder="Введите логин" 
+                          required 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="admin-password">Пароль</Label>
+                        <Input 
+                          id="admin-password"
+                          name="password"
+                          type="password" 
+                          placeholder="Введите пароль" 
+                          required 
+                        />
+                      </div>
+                      <Button type="submit" className="w-full">
+                        Войти
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              )}
               {isAdmin && (
                 <>
                   <Button 
@@ -769,58 +821,6 @@ const Index = () => {
             </div>
 
             <div className="space-y-4 flex items-center justify-center">
-              {!isAdmin && (
-                <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 border-primary-foreground/30"
-                    >
-                      <Icon name="Lock" size={16} className="mr-2" />
-                      Вход для администратора
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Вход для администратора</DialogTitle>
-                      <DialogDescription>
-                        Введите логин и пароль для доступа к панели управления
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleAdminLogin} className="space-y-4">
-                      {loginError && (
-                        <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
-                          {loginError}
-                        </div>
-                      )}
-                      <div className="space-y-2">
-                        <Label htmlFor="admin-login">Логин</Label>
-                        <Input 
-                          id="admin-login"
-                          name="login"
-                          type="text" 
-                          placeholder="Введите логин" 
-                          required 
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="admin-password">Пароль</Label>
-                        <Input 
-                          id="admin-password"
-                          name="password"
-                          type="password" 
-                          placeholder="Введите пароль" 
-                          required 
-                        />
-                      </div>
-                      <Button type="submit" className="w-full">
-                        Войти
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              )}
             </div>
           </div>
           <Separator className="my-6 bg-primary-foreground/20" />
