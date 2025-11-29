@@ -737,22 +737,22 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
+                    href="http://kraysport.ru/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all whitespace-nowrap"
+                  >
+                    Министерство спорта Красноярского края
+                  </a>
+                </li>
+                <li>
+                  <a 
                     href="http://www.krskstate.ru/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hover:text-primary-foreground hover:underline transition-all"
                   >
                     Правительство Красноярского края
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="http://kraysport.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Министерство спорта Красноярского края
                   </a>
                 </li>
               </ul>
