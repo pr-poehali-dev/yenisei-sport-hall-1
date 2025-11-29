@@ -762,7 +762,7 @@ const Index = () => {
                     rel="noopener noreferrer"
                     className="hover:text-primary-foreground hover:underline transition-all"
                   >
-                    Партия Единая Россия
+                    Партия "Единая Россия"
                   </a>
                 </li>
               </ul>
