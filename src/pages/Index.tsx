@@ -725,7 +725,7 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Информация</h4>
-              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-primary-foreground/80 text-sm text-center">
+              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>
                   <a 
                     href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=rules" 
@@ -771,7 +771,7 @@ const Index = () => {
 
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
-              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-primary-foreground/80 text-sm text-center">
+              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>
                   <a 
                     href="https://minsport.gov.ru/" 
