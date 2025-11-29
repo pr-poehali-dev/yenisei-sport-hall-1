@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import { ContactsTab } from '@/components/admin/ContactsTab';
+import { SportsTab } from '@/components/admin/SportsTab';
+import { DocumentsTab } from '@/components/admin/DocumentsTab';
+import { FeedbackTab } from '@/components/admin/FeedbackTab';
 
 interface Contact {
   address: string;
@@ -122,6 +121,10 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         variant: 'destructive'
       });
     }
+  };
+
+  const updateContactField = (field: keyof Contact, value: string) => {
+    setEditedContacts({ ...editedContacts, [field]: value });
   };
 
   const updateSportField = (index: number, field: keyof Sport, value: string | string[]) => {
@@ -261,310 +264,43 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
             <TabsTrigger value="contacts">Контакты</TabsTrigger>
             <TabsTrigger value="sports">Виды спорта</TabsTrigger>
             <TabsTrigger value="documents">Документы</TabsTrigger>
-            <TabsTrigger value="feedback">
-              Сообщения ({feedbackStats?.total_count || 0})
-            </TabsTrigger>
+            <TabsTrigger value="feedback">Отзывы</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="contacts" className="space-y-4 mt-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Редактирование контактов</CardTitle>
-                <CardDescription>Измените контактную информацию</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="address">Адрес</Label>
-                  <Input
-                    id="address"
-                    value={editedContacts.address}
-                    onChange={(e) => setEditedContacts({ ...editedContacts, address: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Телефон</Label>
-                  <Input
-                    id="phone"
-                    value={editedContacts.phone}
-                    onChange={(e) => setEditedContacts({ ...editedContacts, phone: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={editedContacts.email}
-                    onChange={(e) => setEditedContacts({ ...editedContacts, email: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="hours">Режим работы</Label>
-                  <Input
-                    id="hours"
-                    value={editedContacts.hours}
-                    onChange={(e) => setEditedContacts({ ...editedContacts, hours: e.target.value })}
-                  />
-                </div>
-                <Button onClick={handleSaveContacts} className="w-full">
-                  <Icon name="Save" size={16} className="mr-2" />
-                  Сохранить изменения
-                </Button>
-              </CardContent>
-            </Card>
+          <TabsContent value="contacts" className="space-y-4">
+            <ContactsTab
+              editedContacts={editedContacts}
+              onContactChange={updateContactField}
+              onSave={handleSaveContacts}
+            />
           </TabsContent>
 
-          <TabsContent value="documents" className="space-y-4 mt-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Управление документами</CardTitle>
-                <CardDescription>Загрузите PDF файлы для информационных ссылок</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="rules-doc">Правила посещения</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="rules-doc"
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => handleDocumentUpload(e, 'rules')}
-                        className="flex-1"
-                      />
-                      {uploadStatus.rules === 'uploading' && (
-                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
-                      )}
-                      {uploadStatus.rules === 'success' && (
-                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="prices-doc">Прейскурант цен</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="prices-doc"
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => handleDocumentUpload(e, 'prices')}
-                        className="flex-1"
-                      />
-                      {uploadStatus.prices === 'uploading' && (
-                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
-                      )}
-                      {uploadStatus.prices === 'success' && (
-                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="benefits-doc">Перечень льготников</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="benefits-doc"
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => handleDocumentUpload(e, 'benefits')}
-                        className="flex-1"
-                      />
-                      {uploadStatus.benefits === 'uploading' && (
-                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
-                      )}
-                      {uploadStatus.benefits === 'success' && (
-                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="schedule-doc">Расписание</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="schedule-doc"
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => handleDocumentUpload(e, 'schedule')}
-                        className="flex-1"
-                      />
-                      {uploadStatus.schedule === 'uploading' && (
-                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
-                      )}
-                      {uploadStatus.schedule === 'success' && (
-                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="sports" className="space-y-4">
+            <SportsTab
+              editedSports={editedSports}
+              onSportFieldChange={updateSportField}
+              onRuleChange={updateSportRules}
+              onSafetyChange={updateSportSafety}
+              onAddRule={addSportRule}
+              onRemoveRule={removeSportRule}
+              onAddSafety={addSportSafety}
+              onRemoveSafety={removeSportSafety}
+              onSave={handleSaveSports}
+            />
           </TabsContent>
 
-          <TabsContent value="sports" className="space-y-4 mt-4">
-            {editedSports.map((sport, sportIndex) => (
-              <Card key={sport.id}>
-                <CardHeader>
-                  <CardTitle>{sport.name}</CardTitle>
-                  <CardDescription>Редактирование информации о виде спорта</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Название</Label>
-                    <Input
-                      value={sport.name}
-                      onChange={(e) => updateSportField(sportIndex, 'name', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>URL изображения</Label>
-                    <Input
-                      value={sport.image}
-                      onChange={(e) => updateSportField(sportIndex, 'image', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>URL видео</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        value={sport.video}
-                        onChange={(e) => updateSportField(sportIndex, 'video', e.target.value)}
-                        placeholder="https://rutube.ru/play/embed/..."
-                        className="flex-1"
-                      />
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => window.open(sport.video, '_blank')}
-                        disabled={!sport.video}
-                      >
-                        <Icon name="ExternalLink" size={16} className="mr-1" />
-                        Проверить
-                      </Button>
-                    </div>
-                    {sport.video && (
-                      <div className="mt-2 rounded-lg overflow-hidden border">
-                        <iframe
-                          src={sport.video}
-                          width="100%"
-                          height="300"
-                          allow="clipboard-write; autoplay"
-                          allowFullScreen
-                          className="w-full"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Правила игры</Label>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => addSportRule(sportIndex)}
-                      >
-                        <Icon name="Plus" size={16} className="mr-1" />
-                        Добавить
-                      </Button>
-                    </div>
-                    {sport.rules.map((rule, ruleIndex) => (
-                      <div key={ruleIndex} className="flex gap-2">
-                        <Textarea
-                          value={rule}
-                          onChange={(e) => updateSportRules(sportIndex, ruleIndex, e.target.value)}
-                          rows={2}
-                        />
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => removeSportRule(sportIndex, ruleIndex)}
-                        >
-                          <Icon name="Trash2" size={16} />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Техника безопасности</Label>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => addSportSafety(sportIndex)}
-                      >
-                        <Icon name="Plus" size={16} className="mr-1" />
-                        Добавить
-                      </Button>
-                    </div>
-                    {sport.safety.map((item, safetyIndex) => (
-                      <div key={safetyIndex} className="flex gap-2">
-                        <Textarea
-                          value={item}
-                          onChange={(e) => updateSportSafety(sportIndex, safetyIndex, e.target.value)}
-                          rows={2}
-                        />
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => removeSportSafety(sportIndex, safetyIndex)}
-                        >
-                          <Icon name="Trash2" size={16} />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-
-                  <Button onClick={handleSaveSports} className="w-full">
-                    <Icon name="Save" size={16} className="mr-2" />
-                    Сохранить изменения
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+          <TabsContent value="documents" className="space-y-4">
+            <DocumentsTab
+              uploadStatus={uploadStatus}
+              onDocumentUpload={handleDocumentUpload}
+            />
           </TabsContent>
 
-          <TabsContent value="feedback" className="space-y-4 mt-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Icon name="MessageSquare" size={24} />
-                  Статистика сообщений
-                </CardTitle>
-                <CardDescription>
-                  Всего получено сообщений: {feedbackStats?.total_count || 0}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {feedbackStats?.recent_messages?.length > 0 ? (
-                  feedbackStats.recent_messages.map((msg: any, index: number) => (
-                    <Card key={index} className="bg-muted/50">
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="text-lg">{msg.name}</CardTitle>
-                            <CardDescription>{msg.email}</CardDescription>
-                          </div>
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(msg.created_at).toLocaleString('ru-RU')}
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
-                      </CardContent>
-                    </Card>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Icon name="Inbox" size={48} className="mx-auto mb-2 opacity-50" />
-                    <p>Сообщений пока нет</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          <TabsContent value="feedback" className="space-y-4">
+            <FeedbackTab
+              feedbackStats={feedbackStats}
+              onRefresh={loadFeedbackStats}
+            />
           </TabsContent>
         </Tabs>
       </DialogContent>
