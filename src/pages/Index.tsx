@@ -715,11 +715,13 @@ const Index = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
               <div className="flex justify-center mb-4">
-                <img 
-                  src="https://cdn.poehali.dev/projects/a9506489-63c9-42b2-9de9-54615ceeaf14/files/e4633664-3bee-4141-92c6-ed645b1c4857.jpg" 
-                  alt="Спорт - норма жизни" 
-                  className="h-20 w-auto object-contain"
-                />
+                <div className="bg-primary p-4 rounded-lg">
+                  <img 
+                    src="https://cdn.poehali.dev/files/118160db-a2d3-4157-8d5b-2b205f464b4c.jpg" 
+                    alt="Спорт - норма жизни" 
+                    className="h-24 w-auto object-contain"
+                  />
+                </div>
               </div>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>Министерство спорта РФ</li>
