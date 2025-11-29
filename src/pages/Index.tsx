@@ -681,7 +681,7 @@ const Index = () => {
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>
                   <a 
-                    href="/docs/rules.pdf" 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=rules" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hover:text-primary-foreground hover:underline transition-all"
@@ -691,7 +691,7 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="/docs/prices.pdf" 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=prices" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hover:text-primary-foreground hover:underline transition-all"
@@ -701,7 +701,7 @@ const Index = () => {
                 </li>
                 <li>
                   <a 
-                    href="/docs/benefits.pdf" 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=benefits" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hover:text-primary-foreground hover:underline transition-all"

@@ -38,6 +38,11 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
   const [editedContacts, setEditedContacts] = useState(contacts);
   const [editedSports, setEditedSports] = useState(sports);
   const [feedbackStats, setFeedbackStats] = useState<any>(null);
+  const [uploadStatus, setUploadStatus] = useState<Record<string, 'idle' | 'uploading' | 'success' | 'error'>>({
+    rules: 'idle',
+    prices: 'idle',
+    benefits: 'idle'
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -164,7 +169,55 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
     setEditedSports(updated);
   };
 
+  const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>, docType: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
+    if (file.type !== 'application/pdf') {
+      toast({
+        title: 'Ошибка',
+        description: 'Можно загружать только PDF файлы',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setUploadStatus(prev => ({ ...prev, [docType]: 'uploading' }));
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('docType', docType);
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        setUploadStatus(prev => ({ ...prev, [docType]: 'success' }));
+        toast({
+          title: 'Документ загружен',
+          description: `Файл ${file.name} успешно загружен`,
+        });
+        setTimeout(() => {
+          setUploadStatus(prev => ({ ...prev, [docType]: 'idle' }));
+        }, 3000);
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      setUploadStatus(prev => ({ ...prev, [docType]: 'error' }));
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось загрузить документ',
+        variant: 'destructive'
+      });
+      setTimeout(() => {
+        setUploadStatus(prev => ({ ...prev, [docType]: 'idle' }));
+      }, 3000);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -241,28 +294,66 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
             <Card>
               <CardHeader>
                 <CardTitle>Управление документами</CardTitle>
-                <CardDescription>Инструкция по добавлению PDF файлов</CardDescription>
+                <CardDescription>Загрузите PDF файлы для информационных ссылок</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="bg-muted p-4 rounded-lg space-y-3">
-                  <p className="text-sm font-medium">Для добавления документов:</p>
-                  <ol className="text-sm space-y-2 list-decimal list-inside text-muted-foreground">
-                    <li>Создайте папку <code className="bg-background px-2 py-1 rounded">public/docs/</code> в корне проекта</li>
-                    <li>Поместите в неё PDF файлы с названиями:
-                      <ul className="ml-6 mt-1 space-y-1">
-                        <li>• <code className="bg-background px-2 py-1 rounded">rules.pdf</code> - Правила посещения</li>
-                        <li>• <code className="bg-background px-2 py-1 rounded">prices.pdf</code> - Прейскурант цен</li>
-                        <li>• <code className="bg-background px-2 py-1 rounded">benefits.pdf</code> - Перечень льготников</li>
-                      </ul>
-                    </li>
-                    <li>Файлы автоматически станут доступны по ссылкам в футере</li>
-                  </ol>
-                </div>
-                
-                <div className="border-l-4 border-primary pl-4 py-2">
-                  <p className="text-sm text-muted-foreground">
-                    💡 Совет: Используйте GitHub интеграцию для удобного управления файлами проекта
-                  </p>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="rules-doc">Правила посещения</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="rules-doc"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleDocumentUpload(e, 'rules')}
+                        className="flex-1"
+                      />
+                      {uploadStatus.rules === 'uploading' && (
+                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
+                      )}
+                      {uploadStatus.rules === 'success' && (
+                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="prices-doc">Прейскурант цен</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="prices-doc"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleDocumentUpload(e, 'prices')}
+                        className="flex-1"
+                      />
+                      {uploadStatus.prices === 'uploading' && (
+                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
+                      )}
+                      {uploadStatus.prices === 'success' && (
+                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="benefits-doc">Перечень льготников</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="benefits-doc"
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => handleDocumentUpload(e, 'benefits')}
+                        className="flex-1"
+                      />
+                      {uploadStatus.benefits === 'uploading' && (
+                        <span className="text-sm text-muted-foreground self-center">Загрузка...</span>
+                      )}
+                      {uploadStatus.benefits === 'success' && (
+                        <Icon name="CheckCircle" size={20} className="text-green-600 self-center" />
+                      )}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
