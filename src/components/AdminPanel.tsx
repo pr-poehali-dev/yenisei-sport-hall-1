@@ -164,45 +164,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
     setEditedSports(updated);
   };
 
-  const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>, docType: string) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
 
-    if (file.type !== 'application/pdf') {
-      toast({
-        title: 'Ошибка',
-        description: 'Можно загружать только PDF файлы',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('docType', docType);
-
-    try {
-      const response = await fetch('https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        toast({
-          title: 'Документ загружен',
-          description: `Файл ${file.name} успешно загружен`,
-        });
-      } else {
-        throw new Error('Upload failed');
-      }
-    } catch (error) {
-      toast({
-        title: 'Ошибка',
-        description: 'Не удалось загрузить документ',
-        variant: 'destructive'
-      });
-    }
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -279,42 +241,28 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
             <Card>
               <CardHeader>
                 <CardTitle>Управление документами</CardTitle>
-                <CardDescription>Загрузите PDF файлы для информационных ссылок</CardDescription>
+                <CardDescription>Инструкция по добавлению PDF файлов</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="rules-doc">Правила посещения</Label>
-                    <Input
-                      id="rules-doc"
-                      type="file"
-                      accept=".pdf"
-                      onChange={(e) => handleDocumentUpload(e, 'rules')}
-                    />
-                    <p className="text-sm text-muted-foreground">Текущий файл: rules.pdf</p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="prices-doc">Прейскурант цен</Label>
-                    <Input
-                      id="prices-doc"
-                      type="file"
-                      accept=".pdf"
-                      onChange={(e) => handleDocumentUpload(e, 'prices')}
-                    />
-                    <p className="text-sm text-muted-foreground">Текущий файл: prices.pdf</p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="benefits-doc">Перечень льготников</Label>
-                    <Input
-                      id="benefits-doc"
-                      type="file"
-                      accept=".pdf"
-                      onChange={(e) => handleDocumentUpload(e, 'benefits')}
-                    />
-                    <p className="text-sm text-muted-foreground">Текущий файл: benefits.pdf</p>
-                  </div>
+                <div className="bg-muted p-4 rounded-lg space-y-3">
+                  <p className="text-sm font-medium">Для добавления документов:</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside text-muted-foreground">
+                    <li>Создайте папку <code className="bg-background px-2 py-1 rounded">public/docs/</code> в корне проекта</li>
+                    <li>Поместите в неё PDF файлы с названиями:
+                      <ul className="ml-6 mt-1 space-y-1">
+                        <li>• <code className="bg-background px-2 py-1 rounded">rules.pdf</code> - Правила посещения</li>
+                        <li>• <code className="bg-background px-2 py-1 rounded">prices.pdf</code> - Прейскурант цен</li>
+                        <li>• <code className="bg-background px-2 py-1 rounded">benefits.pdf</code> - Перечень льготников</li>
+                      </ul>
+                    </li>
+                    <li>Файлы автоматически станут доступны по ссылкам в футере</li>
+                  </ol>
+                </div>
+                
+                <div className="border-l-4 border-primary pl-4 py-2">
+                  <p className="text-sm text-muted-foreground">
+                    💡 Совет: Используйте GitHub интеграцию для удобного управления файлами проекта
+                  </p>
                 </div>
               </CardContent>
             </Card>
