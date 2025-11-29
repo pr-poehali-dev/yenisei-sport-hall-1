@@ -513,7 +513,7 @@ const Index = () => {
             
             <Accordion type="single" collapsible className="space-y-4">
               <AccordionItem value="about">
-                <AccordionTrigger className="text-xl font-semibold">
+                <AccordionTrigger className="text-xl font-semibold text-center md:text-left">
                   О проекте
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground text-base leading-relaxed">
@@ -538,7 +538,7 @@ const Index = () => {
               </AccordionItem>
 
               <AccordionItem value="privacy">
-                <AccordionTrigger className="text-xl font-semibold">
+                <AccordionTrigger className="text-xl font-semibold text-center md:text-left">
                   Политика конфиденциальности
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground text-base leading-relaxed">
@@ -557,7 +557,7 @@ const Index = () => {
               </AccordionItem>
 
               <AccordionItem value="partners">
-                <AccordionTrigger className="text-xl font-semibold">
+                <AccordionTrigger className="text-xl font-semibold text-center md:text-left">
                   Условия и требования к партнерам
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground text-base leading-relaxed">
