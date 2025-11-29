@@ -745,6 +745,16 @@ const Index = () => {
                     Правительство Красноярского края
                   </a>
                 </li>
+                <li>
+                  <a 
+                    href="http://kraysport.ru/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Министерство спорта Красноярского края
+                  </a>
+                </li>
               </ul>
             </div>
 
