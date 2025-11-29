@@ -675,7 +675,43 @@ const Index = () => {
 
       <footer className="bg-primary text-primary-foreground py-8 mt-16">
         <div className="container mx-auto px-4">
-          <div className="flex justify-center">
+          <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold mb-4 text-center">Информация</h4>
+              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
+                <li>
+                  <a 
+                    href="/docs/rules.pdf" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Правила посещения
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="/docs/prices.pdf" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Прейскурант цен
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="/docs/benefits.pdf" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Перечень льготников
+                  </a>
+                </li>
+              </ul>
+            </div>
+            
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
