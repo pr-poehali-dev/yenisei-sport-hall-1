@@ -120,13 +120,16 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'body': json.dumps({'success': True, 'docType': doc_type})
             }
         except Exception as e:
+            print(f"POST Error: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return {
                 'statusCode': 500,
                 'headers': {
                     'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/json'
                 },
-                'body': json.dumps({'error': str(e)})
+                'body': json.dumps({'error': str(e), 'type': type(e).__name__})
             }
     
     return {
