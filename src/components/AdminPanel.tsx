@@ -184,33 +184,56 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
 
     setUploadStatus(prev => ({ ...prev, [docType]: 'uploading' }));
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('docType', docType);
-
     try {
-      const response = await fetch('https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f', {
-        method: 'POST',
-        body: formData
-      });
+      const reader = new FileReader();
+      
+      reader.onload = async () => {
+        try {
+          const base64Data = reader.result as string;
+          const base64Content = base64Data.split(',')[1];
 
-      if (response.ok) {
-        setUploadStatus(prev => ({ ...prev, [docType]: 'success' }));
-        toast({
-          title: 'Документ загружен',
-          description: `Файл ${file.name} успешно загружен`,
-        });
-        setTimeout(() => {
-          setUploadStatus(prev => ({ ...prev, [docType]: 'idle' }));
-        }, 3000);
-      } else {
-        throw new Error('Upload failed');
-      }
+          const response = await fetch('https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              docType: docType,
+              fileData: base64Content
+            })
+          });
+
+          if (response.ok) {
+            setUploadStatus(prev => ({ ...prev, [docType]: 'success' }));
+            toast({
+              title: 'Документ загружен',
+              description: `Файл ${file.name} успешно загружен`,
+            });
+            setTimeout(() => {
+              setUploadStatus(prev => ({ ...prev, [docType]: 'idle' }));
+            }, 3000);
+          } else {
+            throw new Error('Upload failed');
+          }
+        } catch (error) {
+          setUploadStatus(prev => ({ ...prev, [docType]: 'error' }));
+          toast({
+            title: 'Ошибка',
+            description: 'Не удалось загрузить документ',
+            variant: 'destructive'
+          });
+          setTimeout(() => {
+            setUploadStatus(prev => ({ ...prev, [docType]: 'idle' }));
+          }, 3000);
+        }
+      };
+
+      reader.readAsDataURL(file);
     } catch (error) {
       setUploadStatus(prev => ({ ...prev, [docType]: 'error' }));
       toast({
         title: 'Ошибка',
-        description: 'Не удалось загрузить документ',
+        description: 'Не удалось прочитать файл',
         variant: 'destructive'
       });
       setTimeout(() => {
