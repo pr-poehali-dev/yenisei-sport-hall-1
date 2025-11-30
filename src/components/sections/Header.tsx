@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,6 +27,31 @@ const Header = ({
   unreadCount,
   handleAdminLogout
 }: HeaderProps) => {
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [resetError, setResetError] = useState('');
+  const [resetSuccess, setResetSuccess] = useState('');
+
+  const handlePasswordReset = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const answer = formData.get('secret-answer') as string;
+    const newPassword = formData.get('new-password') as string;
+    
+    // Секретный вопрос: "Название спортивного зала"
+    if (answer.toLowerCase().trim() === 'енисей') {
+      localStorage.setItem('adminPassword', newPassword);
+      setResetSuccess('Пароль успешно изменен! Теперь войдите с новым паролем.');
+      setResetError('');
+      setTimeout(() => {
+        setShowPasswordReset(false);
+        setResetSuccess('');
+      }, 2000);
+    } else {
+      setResetError('Неверный ответ на секретный вопрос');
+      setResetSuccess('');
+    }
+  };
+
   return (
     <header className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -84,10 +110,78 @@ const Header = ({
                     <Button type="submit" className="w-full">
                       Войти
                     </Button>
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswordReset(true)}
+                      className="text-sm text-primary hover:underline w-full text-center"
+                    >
+                      Забыли пароль?
+                    </button>
                   </form>
                 </DialogContent>
               </Dialog>
             )}
+            
+            <Dialog open={showPasswordReset} onOpenChange={setShowPasswordReset}>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Восстановление пароля</DialogTitle>
+                  <DialogDescription>
+                    Ответьте на секретный вопрос для сброса пароля
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handlePasswordReset} className="space-y-4">
+                  {resetError && (
+                    <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
+                      {resetError}
+                    </div>
+                  )}
+                  {resetSuccess && (
+                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded-md text-sm">
+                      {resetSuccess}
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <Label htmlFor="secret-question">Секретный вопрос</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Как называется спортивный зал?
+                    </p>
+                    <Input 
+                      id="secret-answer"
+                      name="secret-answer"
+                      type="text" 
+                      placeholder="Введите ответ" 
+                      required 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">Новый пароль</Label>
+                    <Input 
+                      id="new-password"
+                      name="new-password"
+                      type="password" 
+                      placeholder="Введите новый пароль" 
+                      required 
+                      minLength={6}
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Сбросить пароль
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPasswordReset(false);
+                      setResetError('');
+                      setResetSuccess('');
+                    }}
+                    className="text-sm text-primary hover:underline w-full text-center"
+                  >
+                    Вернуться к входу
+                  </button>
+                </form>
+              </DialogContent>
+            </Dialog>
             {isAdmin && (
               <>
                 <Button 
