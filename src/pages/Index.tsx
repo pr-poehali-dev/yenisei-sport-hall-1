@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import AdminPanel from '@/components/AdminPanel';
+import MobileMenu from '@/components/MobileMenu';
 
 const Index = () => {
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
@@ -294,6 +295,15 @@ const Index = () => {
             <h1 className="text-2xl md:text-4xl font-bold">
               Спортивный зал "Енисей"
             </h1>
+            
+            <MobileMenu 
+              isAdmin={isAdmin}
+              unreadCount={unreadCount}
+              onAdminPanelOpen={() => setIsAdminPanelOpen(true)}
+              onAdminLoginOpen={() => setIsAdminLoginOpen(true)}
+              onAdminLogout={handleAdminLogout}
+            />
+
             <nav className="flex gap-6 items-center">
               <a href="#sports" className="hover:underline hidden md:inline">Виды спорта</a>
               <a href="#feedback" className="hover:underline hidden md:inline">Обратная связь</a>
