@@ -58,7 +58,7 @@ const UsefulSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-background">
+    <section id="useful" className="py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
