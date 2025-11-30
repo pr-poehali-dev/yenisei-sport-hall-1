@@ -188,52 +188,7 @@ const FooterSections = ({ contacts }: FooterSectionsProps) => {
 
       <footer className="bg-primary text-primary-foreground py-8 mt-16">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold mb-4 text-center">Информация</h4>
-              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=rules" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Правила посещения
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=prices" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Прейскурант цен
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=benefits" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Перечень льготников
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=schedule" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Расписание
-                  </a>
-                </li>
-              </ul>
-            </div>
+          <div className="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
 
             <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
@@ -292,6 +247,52 @@ const FooterSections = ({ contacts }: FooterSectionsProps) => {
                     className="hover:text-primary-foreground hover:underline transition-all"
                   >
                     ООО "Каркас"
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold mb-4 text-center">Разное</h4>
+              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
+                <li>
+                  <a 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=rules" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Правила посещения
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=prices" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Прейскурант цен
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=benefits" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Перечень льготников
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=schedule" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    Расписание
                   </a>
                 </li>
               </ul>
