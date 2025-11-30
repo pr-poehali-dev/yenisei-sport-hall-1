@@ -15,6 +15,7 @@ export type { GalleryPhoto };
 export default function PhotoGallery() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
     const loadPhotos = async () => {
@@ -39,9 +40,25 @@ export default function PhotoGallery() {
     };
   }, []);
 
+  const scroll = (direction: 'left' | 'right') => {
+    const container = document.getElementById('gallery-scroll');
+    if (!container) return;
+    
+    const scrollAmount = container.offsetWidth * 0.8;
+    const newPosition = direction === 'left' 
+      ? Math.max(0, scrollPosition - scrollAmount)
+      : Math.min(container.scrollWidth - container.offsetWidth, scrollPosition + scrollAmount);
+    
+    container.scrollTo({ left: newPosition, behavior: 'smooth' });
+    setScrollPosition(newPosition);
+  };
+
   if (photos.length === 0) {
     return null;
   }
+
+  const canScrollLeft = scrollPosition > 0;
+  const canScrollRight = scrollPosition < (document.getElementById('gallery-scroll')?.scrollWidth || 0) - (document.getElementById('gallery-scroll')?.offsetWidth || 0);
 
   return (
     <>
@@ -56,39 +73,66 @@ export default function PhotoGallery() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {photos.map((photo) => (
-              <Card 
-                key={photo.id}
-                className="overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow"
-                onClick={() => setSelectedPhoto(photo)}
-              >
-                <div className="relative aspect-video overflow-hidden bg-muted">
-                  <img
-                    src={photo.url}
-                    alt={photo.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                    <Icon 
-                      name="ZoomIn" 
-                      size={32} 
-                      className="text-white opacity-0 group-hover:opacity-100 transition-opacity"
+          <div className="relative">
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full shadow-lg disabled:opacity-50"
+              onClick={() => scroll('left')}
+              disabled={!canScrollLeft}
+            >
+              <Icon name="ChevronLeft" size={24} />
+            </Button>
+
+            <div 
+              id="gallery-scroll"
+              className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-12"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
+            >
+              {photos.map((photo) => (
+                <Card 
+                  key={photo.id}
+                  className="flex-shrink-0 w-[300px] md:w-[400px] overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow"
+                  onClick={() => setSelectedPhoto(photo)}
+                >
+                  <div className="relative aspect-video overflow-hidden bg-muted">
+                    <img
+                      src={photo.url}
+                      alt={photo.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <Icon 
+                        name="ZoomIn" 
+                        size={32} 
+                        className="text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-foreground mb-1">
-                    {photo.title}
-                  </h3>
-                  {photo.description && (
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {photo.description}
-                    </p>
-                  )}
-                </div>
-              </Card>
-            ))}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-foreground mb-1">
+                      {photo.title}
+                    </h3>
+                    {photo.description && (
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {photo.description}
+                      </p>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full shadow-lg disabled:opacity-50"
+              onClick={() => scroll('right')}
+              disabled={!canScrollRight}
+            >
+              <Icon name="ChevronRight" size={24} />
+            </Button>
           </div>
         </div>
       </section>
