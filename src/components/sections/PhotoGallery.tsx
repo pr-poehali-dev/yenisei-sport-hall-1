@@ -16,6 +16,8 @@ export default function PhotoGallery() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   useEffect(() => {
     const loadPhotos = async () => {
@@ -53,6 +55,32 @@ export default function PhotoGallery() {
     setScrollPosition(newPosition);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        scroll('right');
+      } else {
+        scroll('left');
+      }
+    }
+    
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
   if (photos.length === 0) {
     return null;
   }
@@ -86,9 +114,12 @@ export default function PhotoGallery() {
 
             <div 
               id="gallery-scroll"
-              className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-12"
+              className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-12 touch-pan-x"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               onScroll={(e) => setScrollPosition(e.currentTarget.scrollLeft)}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               {photos.map((photo) => (
                 <Card 
