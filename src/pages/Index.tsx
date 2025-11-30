@@ -845,42 +845,12 @@ const Index = () => {
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>
                   <a 
-                    href="https://www.olympic.ru/" 
+                    href="https://rs38.ru/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="hover:text-primary-foreground hover:underline transition-all"
                   >
-                    Олимпийский комитет России
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://www.Paralympic.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Паралимпийский комитет России
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://russiabasket.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Российская Федерация Баскетбола
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://rushandball.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Федерация Гандбола России
+                    ООО "Каркас"
                   </a>
                 </li>
               </ul>
