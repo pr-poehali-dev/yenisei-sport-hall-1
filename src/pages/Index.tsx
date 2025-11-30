@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import AdminPanel from '@/components/AdminPanel';
-import MobileMenu from '@/components/MobileMenu';
+import Header from '@/components/sections/Header';
+import SportsSection from '@/components/sections/SportsSection';
+import FeedbackSection from '@/components/sections/FeedbackSection';
+import FooterSections from '@/components/sections/FooterSections';
 
 const Index = () => {
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
@@ -228,15 +222,12 @@ const Index = () => {
       });
 
       console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Response data:', data);
 
       if (!response.ok) {
-        const data = await response.json();
-        console.error('Error response:', response.status, data);
-        throw new Error(data.error || 'Server error');
+        throw new Error(data.error || 'Ошибка отправки');
       }
-
-      const data = await response.json();
-      console.log('Success response:', response.status, data);
 
       toast({
         title: 'Спасибо за отзыв!',
@@ -286,9 +277,14 @@ const Index = () => {
     if (oldPassword !== adminPassword) {
       return false;
     }
-    
+
     setAdminPassword(newPassword);
     localStorage.setItem('adminPassword', newPassword);
+    
+    toast({
+      title: 'Пароль изменен',
+      description: 'Новый пароль успешно сохранен',
+    });
     
     return true;
   };
@@ -296,613 +292,58 @@ const Index = () => {
   const handleAdminLogout = () => {
     localStorage.removeItem('adminSession');
     setIsAdmin(false);
+    setUnreadCount(0);
     toast({
       title: 'Выход выполнен',
-      description: 'До свидания!',
+      description: 'До скорой встречи!',
     });
+  };
+
+  const handleContactsUpdate = (newContacts: typeof contacts) => {
+    setContacts(newContacts);
+  };
+
+  const handleSportsUpdate = (newSports: typeof sports) => {
+    setSports(newSports);
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-primary text-primary-foreground py-6 sticky top-0 z-50 shadow-md">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl md:text-4xl font-bold">
-              Спортивный зал "Енисей"
-            </h1>
-            
-            <MobileMenu 
-              isAdmin={isAdmin}
-              unreadCount={unreadCount}
-              onAdminPanelOpen={() => setIsAdminPanelOpen(true)}
-              onAdminLoginOpen={() => setIsAdminLoginOpen(true)}
-              onAdminLogout={handleAdminLogout}
-            />
+      <Header
+        isAdmin={isAdmin}
+        isAdminLoginOpen={isAdminLoginOpen}
+        setIsAdminLoginOpen={setIsAdminLoginOpen}
+        loginError={loginError}
+        handleAdminLogin={handleAdminLogin}
+        setIsAdminPanelOpen={setIsAdminPanelOpen}
+        unreadCount={unreadCount}
+        handleAdminLogout={handleAdminLogout}
+      />
 
-            <nav className="flex gap-6 items-center">
-              <a href="#sports" className="hover:underline hidden md:inline">Виды спорта</a>
-              <a href="#feedback" className="hover:underline hidden md:inline">Обратная связь</a>
-              <a href="#about" className="hover:underline hidden md:inline">О проекте</a>
-              <a href="#contacts" className="hover:underline hidden md:inline">Контакты</a>
-              {!isAdmin && (
-                <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
-                  <DialogTrigger asChild>
-                    <button className="hover:underline hidden md:inline cursor-pointer">
-                      Вход
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Вход для администратора</DialogTitle>
-                      <DialogDescription>
-                        Введите логин и пароль для доступа к панели управления
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleAdminLogin} className="space-y-4">
-                      {loginError && (
-                        <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-md text-sm">
-                          {loginError}
-                        </div>
-                      )}
-                      <div className="space-y-2">
-                        <Label htmlFor="admin-login">Логин</Label>
-                        <Input 
-                          id="admin-login"
-                          name="login"
-                          type="text" 
-                          placeholder="Введите логин" 
-                          required 
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="admin-password">Пароль</Label>
-                        <Input 
-                          id="admin-password"
-                          name="password"
-                          type="password" 
-                          placeholder="Введите пароль" 
-                          required 
-                        />
-                      </div>
-                      <Button type="submit" className="w-full">
-                        Войти
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              )}
-              {isAdmin && (
-                <>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => setIsAdminPanelOpen(true)}
-                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 relative"
-                  >
-                    <Icon name="Settings" size={16} className="mr-2" />
-                    Управление
-                    {unreadCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleAdminLogout}
-                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-                  >
-                    <Icon name="LogOut" size={16} className="mr-2" />
-                    Выход
-                  </Button>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
+      <SportsSection
+        sports={sports}
+        selectedSport={selectedSport}
+        setSelectedSport={setSelectedSport}
+      />
 
-      <section className="py-8 pb-4 bg-gradient-to-b from-primary/10 to-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-foreground">
-              Бизнес-спринт (Я выбираю спорт)
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8">
-              Устройство спортивного зала выполнено в рамках Федерального проекта "Бизнес-спринт" (Я выбираю спорт) национального проекта "Демография"
-            </p>
-            <div className="mt-8 rounded-lg overflow-hidden shadow-xl">
-              <img 
-                src="https://cdn.poehali.dev/files/a7e7ca58-fd77-450f-8aff-a19d887c22e0.jpg" 
-                alt="Спортивный зал Енисей" 
-                className="w-full h-auto object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <FeedbackSection
+        handleFeedbackSubmit={handleFeedbackSubmit}
+        captcha={captcha}
+        captchaInput={captchaInput}
+        setCaptchaInput={setCaptchaInput}
+      />
 
-      <section id="sports" className="pt-4 pb-6 bg-background">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Игровые виды спорта в нашем зале
-          </h2>
-
-          <div className="flex overflow-x-auto gap-4 mb-12 pb-4 snap-x snap-mandatory">
-            {sports.map((sport) => (
-              <Card key={sport.id} className="flex-shrink-0 w-56 overflow-hidden hover:shadow-xl transition-all duration-300 hover-scale snap-center">
-                <div className="h-32 overflow-hidden">
-                  <img 
-                    src={sport.image} 
-                    alt={sport.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardHeader className="p-3">
-                  <CardTitle className="text-lg">{sport.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-3 pt-0">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className="w-full" size="sm" onClick={() => setSelectedSport(sport.id)}>
-                        Подробнее <Icon name="ChevronRight" className="ml-1" size={14} />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle className="text-2xl">{sport.name}</DialogTitle>
-                        <DialogDescription>
-                          Правила игры, техника безопасности и видео-инструкции
-                        </DialogDescription>
-                      </DialogHeader>
-                      
-                      <div className="space-y-6">
-                        <div>
-                          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <Icon name="BookOpen" size={24} className="text-primary" />
-                            Правила игры
-                          </h3>
-                          <ul className="space-y-2">
-                            {sport.rules.map((rule, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <Icon name="Check" size={20} className="text-primary mt-0.5 flex-shrink-0" />
-                                <span>{rule}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <Separator />
-
-                        <div>
-                          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <Icon name="Shield" size={24} className="text-secondary" />
-                            Техника безопасности
-                          </h3>
-                          <ul className="space-y-2">
-                            {sport.safety.map((item, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <Icon name="AlertTriangle" size={20} className="text-secondary mt-0.5 flex-shrink-0" />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <Separator />
-
-                        <div>
-                          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                            <Icon name="Video" size={24} className="text-primary" />
-                            Видео-инструкция
-                          </h3>
-                          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-                            <iframe
-                              src={sport.video}
-                              width="100%"
-                              height="100%"
-                              frameBorder="0"
-                              allow="clipboard-write; autoplay"
-                              allowFullScreen
-                              className="w-full h-full"
-                            ></iframe>
-                          </div>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="feedback" className="pt-20 pb-12 bg-primary/5">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
-              Форма обратной связи
-            </h2>
-            <Card>
-              <CardHeader>
-                <CardTitle>Оставьте отзыв о работе сервиса</CardTitle>
-                <CardDescription>
-                  Ваше мнение поможет нам улучшить качество обслуживания
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleFeedbackSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Имя</Label>
-                    <Input id="name" name="name" placeholder="Введите ваше имя" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" placeholder="example@mail.ru" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Сообщение</Label>
-                    <Textarea 
-                      id="message"
-                      name="message" 
-                      placeholder="Ваш отзыв или предложение" 
-                      rows={5}
-                      required 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="captcha" className="flex items-center gap-2">
-                      <Icon name="Shield" size={18} className="text-primary" />
-                      Проверка: Сколько будет {captcha.num1} + {captcha.num2}?
-                    </Label>
-                    <Input 
-                      id="captcha" 
-                      type="number" 
-                      placeholder="Введите ответ"
-                      value={captchaInput}
-                      onChange={(e) => setCaptchaInput(e.target.value)}
-                      required 
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Отправить отзыв
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section id="about" className="pt-4 pb-12 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Информация о проекте
-            </h2>
-            
-            <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem value="about">
-                <AccordionTrigger className="text-xl font-semibold">
-                  <span className="flex-1 text-center md:text-left">О проекте</span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-base leading-relaxed">
-                  <p className="mb-4">
-                    Спортивный зал "Енисей" создан в рамках Федерального проекта "Бизнес-спринт" (Я выбираю спорт) 
-                    национального проекта "Демография". Проект направлен на развитие спортивной инфраструктуры 
-                    и популяризацию здорового образа жизни среди населения.
-                  </p>
-                  <p className="mb-4">
-                    Национальный проект "Демография" реализуется с 2019 года и включает комплекс мер по улучшению 
-                    демографической ситуации в России, включая развитие физической культуры и спорта.
-                  </p>
-                  <p className="mb-4">
-                    Информационный ресурс создан для информирования пользователей о возможностях спортивного зала, 
-                    правилах игр и технике безопасности при занятиях игровыми видами спорта.
-                  </p>
-                  <p>
-                    Проект поддерживает работу на всех типах устройств (компьютеры, планшеты, мобильные телефоны) 
-                    и совместим со всеми современными операционными системами, включая Российские ОС.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="privacy">
-                <AccordionTrigger className="text-xl font-semibold">
-                  <span className="flex-1 text-center md:text-left">Политика конфиденциальности</span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-base leading-relaxed">
-                  <p className="mb-4">
-                    Мы серьезно относимся к защите ваших персональных данных. Информация, предоставленная вами 
-                    через форму обратной связи, используется исключительно для улучшения качества наших услуг.
-                  </p>
-                  <p className="mb-4">
-                    Мы не передаем ваши данные третьим лицам без вашего согласия. Все данные хранятся в защищенной 
-                    среде и обрабатываются в соответствии с законодательством Российской Федерации.
-                  </p>
-                  <p>
-                    Используя наш сервис, вы соглашаетесь с условиями обработки персональных данных.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="partners">
-                <AccordionTrigger className="text-xl font-semibold">
-                  <span className="flex-1 text-center md:text-left">Условия и требования к партнерам</span>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-base leading-relaxed">
-                  <p className="mb-4">
-                    Мы приветствуем сотрудничество с организациями, заинтересованными в развитии спорта и 
-                    физической культуры в регионе.
-                  </p>
-                  <p className="mb-4">
-                    Требования к партнерам:
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2 mb-4">
-                    <li>Наличие документов, подтверждающих право на проведение спортивных мероприятий</li>
-                    <li>Соблюдение норм безопасности и санитарных требований</li>
-                    <li>Наличие квалифицированного персонала</li>
-                    <li>Готовность к предоставлению необходимой информации для публикации на ресурсе</li>
-                  </ul>
-                  <p>
-                    По вопросам сотрудничества обращайтесь через форму обратной связи.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </div>
-      </section>
-
-      <section id="contacts" className="pt-4 pb-12 bg-primary/5">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Контакты
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="MapPin" size={24} className="text-primary" />
-                    Адрес
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    {contacts.address}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="Phone" size={24} className="text-primary" />
-                    Телефон
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    {contacts.phone}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="Mail" size={24} className="text-primary" />
-                    Email
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    {contacts.email}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="Clock" size={24} className="text-primary" />
-                    Режим работы
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    {contacts.hours}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Icon name="Map" size={24} className="text-primary" />
-                  Как нас найти
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="w-full h-[400px]">
-                  <iframe 
-                    src="https://yandex.ru/map-widget/v1/?ll=92.869907%2C55.995616&z=17&l=map&pt=92.869907,55.995616,pm2rdm"
-                    width="100%" 
-                    height="400" 
-                    frameBorder="0"
-                    allowFullScreen={true}
-                    className="border-0"
-                  ></iframe>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-primary text-primary-foreground py-8 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold mb-4 text-center">Информация</h4>
-              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=rules" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Правила посещения
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=prices" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Прейскурант цен
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=benefits" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Перечень льготников
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://functions.poehali.dev/f86464fd-afbd-480b-a209-1e5d436e180f?type=schedule" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Расписание
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
-              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
-                <li>
-                  <a 
-                    href="https://minsport.gov.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Министерство спорта РФ
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="http://kraysport.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all whitespace-nowrap"
-                  >
-                    Министерство спорта Красноярского края
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="http://www.krskstate.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Правительство Красноярского края
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://proekty.er.ru/projects/detskii-sport" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Партия "Единая Россия"
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold mb-4 text-center">Наши партнеры</h4>
-              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
-                <li>
-                  <a 
-                    href="https://rs38.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    ООО "Каркас"
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <Separator className="my-6 bg-primary-foreground/20" />
-          <div className="text-center text-primary-foreground/80 text-sm space-y-4">
-            <p>© 2025 Спортивный зал. Все права защищены.</p>
-            <div className="flex items-center justify-center gap-4">
-              <a 
-                href="https://www.krascsp.ru" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-primary-foreground underline"
-              >
-                www.krascsp.ru
-              </a>
-              <a 
-                href="https://vk.com/krascsp" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-primary-foreground transition-colors"
-                aria-label="VK"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.785 16.241s.288-.032.436-.193c.136-.148.132-.427.132-.427s-.019-1.304.574-1.496c.584-.19 1.33 1.26 2.124 1.817.6.422 1.056.329 1.056.329l2.126-.03s1.112-.07.585-.962c-.043-.072-.308-.66-1.588-1.87-1.341-1.266-1.161-1.061.454-3.246.984-1.33 1.377-2.143 1.255-2.49-.117-.332-.837-.244-.837-.244l-2.396.015s-.178-.025-.309.056c-.128.079-.21.263-.21.263s-.376 1.018-.877 1.884c-1.057 1.826-1.48 1.924-1.653 1.81-.403-.267-.302-1.074-.302-1.647 0-1.791.266-2.536-.519-2.73-.26-.065-.452-.107-1.119-.114-.857-.009-1.582.003-1.993.208-.273.137-.484.442-.355.459.159.022.519.099.71.364.247.342.238 1.11.238 1.11s.142 2.108-.331 2.37c-.325.18-.77-.187-1.725-1.865-.489-.85-.859-1.79-.859-1.79s-.071-.177-.198-.272c-.154-.114-.37-.15-.37-.15l-2.276.015s-.342.01-.467.161c-.112.134-.009.411-.009.411s1.765 4.208 3.764 6.328c1.833 1.946 3.913 1.817 3.913 1.817h.944z"/>
-                </svg>
-              </a>
-              <a 
-                href="https://t.me/krascsp" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-primary-foreground transition-colors"
-                aria-label="Telegram"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <FooterSections contacts={contacts} />
 
       <AdminPanel
         isOpen={isAdminPanelOpen}
         onClose={() => setIsAdminPanelOpen(false)}
+        onPasswordChange={handlePasswordChange}
+        onContactsUpdate={handleContactsUpdate}
+        onSportsUpdate={handleSportsUpdate}
         contacts={contacts}
         sports={sports}
-        onUpdateContacts={setContacts}
-        onUpdateSports={setSports}
-        onPasswordChange={handlePasswordChange}
+        onUnreadCountChange={loadUnreadCount}
       />
     </div>
   );
