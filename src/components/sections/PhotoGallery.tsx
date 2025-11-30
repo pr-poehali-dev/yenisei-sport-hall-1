@@ -8,45 +8,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { galleryApi, type GalleryPhoto } from '@/lib/galleryApi';
 
-export interface GalleryPhoto {
-  id: string;
-  url: string;
-  title: string;
-  description?: string;
-}
+export type { GalleryPhoto };
 
 export default function PhotoGallery() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
 
   useEffect(() => {
-    const loadPhotos = () => {
-      const savedPhotos = localStorage.getItem('galleryPhotos');
-      if (savedPhotos) {
-        setPhotos(JSON.parse(savedPhotos));
+    const loadPhotos = async () => {
+      try {
+        const data = await galleryApi.getPhotos();
+        setPhotos(data);
+      } catch (error) {
+        console.error('Error loading photos:', error);
       }
     };
 
     loadPhotos();
 
-    // Обновляем галерею при изменениях в localStorage
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'galleryPhotos') {
-        loadPhotos();
-      }
-    };
-
-    // Обновляем галерею при изменениях в текущей вкладке
     const handleCustomUpdate = () => {
       loadPhotos();
     };
 
-    window.addEventListener('storage', handleStorageChange);
     window.addEventListener('galleryUpdate', handleCustomUpdate);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('galleryUpdate', handleCustomUpdate);
     };
   }, []);

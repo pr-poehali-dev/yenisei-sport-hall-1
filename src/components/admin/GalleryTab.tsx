@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
-import type { GalleryPhoto } from '@/components/sections/PhotoGallery';
+import { galleryApi, type GalleryPhoto } from '@/lib/galleryApi';
 
 export default function GalleryTab() {
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
@@ -22,20 +22,32 @@ export default function GalleryTab() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const savedPhotos = localStorage.getItem('galleryPhotos');
-    if (savedPhotos) {
-      setPhotos(JSON.parse(savedPhotos));
-    }
-  }, []);
+    const loadPhotos = async () => {
+      try {
+        const data = await galleryApi.getPhotos();
+        setPhotos(data);
+      } catch (error) {
+        console.error('Error loading photos:', error);
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось загрузить фото',
+          variant: 'destructive'
+        });
+      }
+    };
+    loadPhotos();
+  }, [toast]);
 
-  const savePhotos = (newPhotos: GalleryPhoto[]) => {
-    localStorage.setItem('galleryPhotos', JSON.stringify(newPhotos));
-    setPhotos(newPhotos);
-    // Уведомляем другие компоненты об обновлении
-    window.dispatchEvent(new Event('galleryUpdate'));
+  const loadPhotos = async () => {
+    try {
+      const data = await galleryApi.getPhotos();
+      setPhotos(data);
+    } catch (error) {
+      console.error('Error loading photos:', error);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.url || !formData.title) {
@@ -47,32 +59,31 @@ export default function GalleryTab() {
       return;
     }
 
-    if (editingId) {
-      const updatedPhotos = photos.map(photo =>
-        photo.id === editingId
-          ? { ...photo, ...formData }
-          : photo
-      );
-      savePhotos(updatedPhotos);
+    try {
+      if (editingId) {
+        await galleryApi.updatePhoto(editingId, formData);
+        toast({
+          title: 'Фото обновлено',
+          description: 'Изменения сохранены'
+        });
+        setEditingId(null);
+      } else {
+        await galleryApi.addPhoto(formData);
+        toast({
+          title: 'Фото добавлено',
+          description: 'Новое фото появилось в галерее'
+        });
+        setIsAdding(false);
+      }
+      await loadPhotos();
+      setFormData({ url: '', title: '', description: '' });
+    } catch (error) {
       toast({
-        title: 'Фото обновлено',
-        description: 'Изменения сохранены'
+        title: 'Ошибка',
+        description: 'Не удалось сохранить фото',
+        variant: 'destructive'
       });
-      setEditingId(null);
-    } else {
-      const newPhoto: GalleryPhoto = {
-        id: Date.now().toString(),
-        ...formData
-      };
-      savePhotos([...photos, newPhoto]);
-      toast({
-        title: 'Фото добавлено',
-        description: 'Новое фото появилось в галерее'
-      });
-      setIsAdding(false);
     }
-
-    setFormData({ url: '', title: '', description: '' });
   };
 
   const handleEdit = (photo: GalleryPhoto) => {
@@ -85,13 +96,21 @@ export default function GalleryTab() {
     setIsAdding(false);
   };
 
-  const handleDelete = (id: string) => {
-    const updatedPhotos = photos.filter(photo => photo.id !== id);
-    savePhotos(updatedPhotos);
-    toast({
-      title: 'Фото удалено',
-      description: 'Фотография удалена из галереи'
-    });
+  const handleDelete = async (id: string) => {
+    try {
+      await galleryApi.deletePhoto(id);
+      await loadPhotos();
+      toast({
+        title: 'Фото удалено',
+        description: 'Фотография удалена из галереи'
+      });
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось удалить фото',
+        variant: 'destructive'
+      });
+    }
   };
 
   const handleCancel = () => {

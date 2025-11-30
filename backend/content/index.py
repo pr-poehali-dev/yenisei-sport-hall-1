@@ -23,7 +23,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token',
                 'Access-Control-Max-Age': '86400'
             },
@@ -41,6 +41,32 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         cur = conn.cursor()
         
         if method == 'GET':
+            params = event.get('queryStringParameters', {})
+            content_type = params.get('type', 'all')
+            
+            if content_type == 'gallery':
+                cur.execute('SELECT id, url, title, description, created_at FROM gallery_photos ORDER BY created_at DESC')
+                photos = cur.fetchall()
+                
+                result = []
+                for photo in photos:
+                    result.append({
+                        'id': str(photo['id']),
+                        'url': photo['url'],
+                        'title': photo['title'],
+                        'description': photo['description']
+                    })
+                
+                cur.close()
+                conn.close()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': headers,
+                    'isBase64Encoded': False,
+                    'body': json.dumps(result)
+                }
+            
             cur.execute('SELECT address, phone, email, hours FROM contacts ORDER BY id DESC LIMIT 1')
             contacts = cur.fetchone()
             
@@ -83,9 +109,58 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 })
             }
         
+        if method == 'POST':
+            body_data = json.loads(event.get('body', '{}'))
+            post_type = body_data.get('type')
+            
+            if post_type == 'gallery':
+                data = body_data.get('data', {})
+                cur.execute(
+                    'INSERT INTO gallery_photos (url, title, description) VALUES (%s, %s, %s) RETURNING id',
+                    (data.get('url'), data.get('title'), data.get('description', ''))
+                )
+                photo_id = cur.fetchone()['id']
+                conn.commit()
+                
+                cur.close()
+                conn.close()
+                
+                return {
+                    'statusCode': 201,
+                    'headers': headers,
+                    'isBase64Encoded': False,
+                    'body': json.dumps({
+                        'success': True,
+                        'id': str(photo_id),
+                        'url': data.get('url'),
+                        'title': data.get('title'),
+                        'description': data.get('description', '')
+                    })
+                }
+        
         if method == 'PUT':
             body_data = json.loads(event.get('body', '{}'))
             update_type = body_data.get('type')
+            
+            if update_type == 'gallery':
+                data = body_data.get('data', {})
+                photo_id = data.get('id')
+                
+                cur.execute(
+                    'UPDATE gallery_photos SET url = %s, title = %s, description = %s, updated_at = CURRENT_TIMESTAMP WHERE id = %s',
+                    (data.get('url'), data.get('title'), data.get('description', ''), int(photo_id))
+                )
+                conn.commit()
+                
+                cur.close()
+                conn.close()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': headers,
+                    'isBase64Encoded': False,
+                    'body': json.dumps({'success': True, 'message': 'Фото обновлено'})
+                }
             
             if update_type == 'contacts':
                 data = body_data.get('data', {})
@@ -153,6 +228,33 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'headers': headers,
                     'isBase64Encoded': False,
                     'body': json.dumps({'success': True, 'message': 'Виды спорта обновлены'})
+                }
+        
+        if method == 'DELETE':
+            params = event.get('queryStringParameters', {})
+            delete_type = params.get('type')
+            
+            if delete_type == 'gallery':
+                photo_id = params.get('id')
+                if not photo_id:
+                    return {
+                        'statusCode': 400,
+                        'headers': headers,
+                        'isBase64Encoded': False,
+                        'body': json.dumps({'error': 'id required'})
+                    }
+                
+                cur.execute('DELETE FROM gallery_photos WHERE id = %s', (int(photo_id),))
+                conn.commit()
+                
+                cur.close()
+                conn.close()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': headers,
+                    'isBase64Encoded': False,
+                    'body': json.dumps({'success': True, 'message': 'Фото удалено'})
                 }
         
         return {
