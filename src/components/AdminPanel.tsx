@@ -73,6 +73,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
   };
 
   const handleSaveContacts = async () => {
+    console.log('Saving contacts:', editedContacts);
     try {
       const response = await fetch('https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b', {
         method: 'PUT',
@@ -85,16 +86,23 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         })
       });
       
+      console.log('Save contacts response:', response.status);
+      
       if (response.ok) {
+        const result = await response.json();
+        console.log('Save result:', result);
         onUpdateContacts(editedContacts);
         toast({
           title: 'Контакты обновлены',
           description: 'Изменения успешно сохранены в базе данных',
         });
       } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Save failed:', response.status, errorData);
         throw new Error('Failed to save');
       }
     } catch (error) {
+      console.error('Save error:', error);
       toast({
         title: 'Ошибка',
         description: 'Не удалось сохранить изменения',
