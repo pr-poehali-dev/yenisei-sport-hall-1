@@ -37,16 +37,16 @@ const SportsSection = ({ sports, selectedSport, setSelectedSport }: SportsSectio
 
       <section id="sports" className="py-12 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
-            Игровые виды спорта в нашем зале
-          </h2>
-          <div className="max-w-4xl mx-auto mb-12">
+          <div className="max-w-4xl mx-auto mb-8">
             <img 
               src="https://cdn.poehali.dev/files/79e45f37-da8f-4ce8-a3a0-213555b8d0bd.jpg" 
               alt="Баскетбол в зале" 
               className="w-full h-auto rounded-lg shadow-lg"
             />
           </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            Игровые виды спорта в нашем зале
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sports.map((sport) => (
               <Card key={sport.id} className="overflow-hidden hover:shadow-xl transition-shadow">
