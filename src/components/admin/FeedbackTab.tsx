@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 
@@ -126,10 +127,10 @@ export const FeedbackTab = ({ feedbackStats, onRefresh }: FeedbackTabProps) => {
               )}
               {item.name}
             </CardTitle>
-            <CardDescription className="flex items-center gap-4 text-sm">
+            <CardDescription className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 text-xs md:text-sm">
               <span className="flex items-center gap-1">
                 <Icon name="Mail" size={14} />
-                {item.email}
+                <span className="truncate">{item.email}</span>
               </span>
               <span className="flex items-center gap-1">
                 <Icon name="Calendar" size={14} />
@@ -137,13 +138,14 @@ export const FeedbackTab = ({ feedbackStats, onRefresh }: FeedbackTabProps) => {
               </span>
             </CardDescription>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-1 md:gap-2">
             {!item.is_read && !isArchived && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => markAsRead(item.id)}
                 title="Отметить прочитанным"
+                className="h-8 w-8 p-0"
               >
                 <Icon name="Check" size={14} />
               </Button>
@@ -152,6 +154,7 @@ export const FeedbackTab = ({ feedbackStats, onRefresh }: FeedbackTabProps) => {
               variant="outline"
               size="sm"
               onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+              className="h-8 w-8 p-0"
             >
               <Icon name={expandedId === item.id ? "ChevronUp" : "ChevronDown"} size={14} />
             </Button>
@@ -161,6 +164,7 @@ export const FeedbackTab = ({ feedbackStats, onRefresh }: FeedbackTabProps) => {
                 size="sm"
                 onClick={() => archiveFeedback(item.id)}
                 title="В архив"
+                className="h-8 w-8 p-0"
               >
                 <Icon name="Archive" size={14} />
               </Button>
@@ -170,6 +174,7 @@ export const FeedbackTab = ({ feedbackStats, onRefresh }: FeedbackTabProps) => {
                 size="sm"
                 onClick={() => unarchiveFeedback(item.id)}
                 title="Восстановить"
+                className="h-8 w-8 p-0"
               >
                 <Icon name="ArchiveRestore" size={14} />
               </Button>
@@ -179,6 +184,7 @@ export const FeedbackTab = ({ feedbackStats, onRefresh }: FeedbackTabProps) => {
               size="sm"
               onClick={() => deleteFeedback(item.id)}
               title="Удалить"
+              className="h-8 w-8 p-0"
             >
               <Icon name="Trash2" size={14} />
             </Button>
@@ -200,38 +206,38 @@ export const FeedbackTab = ({ feedbackStats, onRefresh }: FeedbackTabProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Icon name="MessageSquare" size={20} />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm md:text-lg flex items-center gap-2">
+              <Icon name="MessageSquare" size={18} />
               Всего отзывов
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">{feedbackStats.total_count}</p>
+            <p className="text-2xl md:text-3xl font-bold">{feedbackStats.total_count}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Icon name="Mail" size={20} />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm md:text-lg flex items-center gap-2">
+              <Icon name="Mail" size={18} />
               Непрочитанных
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-primary">{feedbackStats.unread_count}</p>
+            <p className="text-2xl md:text-3xl font-bold text-primary">{feedbackStats.unread_count}</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Icon name="Archive" size={20} />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm md:text-lg flex items-center gap-2">
+              <Icon name="Archive" size={18} />
               В архиве
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-muted-foreground">{feedbackStats.archived_count || 0}</p>
+            <p className="text-2xl md:text-3xl font-bold text-muted-foreground">{feedbackStats.archived_count || 0}</p>
           </CardContent>
         </Card>
       </div>
