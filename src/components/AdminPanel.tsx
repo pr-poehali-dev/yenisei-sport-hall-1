@@ -74,7 +74,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
 
   const handleSaveContacts = async () => {
     try {
-      const url = 'https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b';
+      const url = `https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b?_t=${Date.now()}`;
       const payload = {
         type: 'contacts',
         data: editedContacts
@@ -85,11 +85,13 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         headers: {
           'Content-Type': 'application/json',
         },
+        cache: 'no-store',
         body: JSON.stringify(payload)
       });
       
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
       
       const result = await response.json();
@@ -100,6 +102,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         description: 'Изменения успешно сохранены в базе данных',
       });
     } catch (error) {
+      console.error('Save contacts error:', error);
       toast({
         title: 'Ошибка',
         description: error instanceof Error ? error.message : 'Не удалось сохранить изменения',
