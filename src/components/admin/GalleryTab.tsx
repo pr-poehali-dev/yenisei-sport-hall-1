@@ -17,6 +17,8 @@ export default function GalleryTab() {
     title: '',
     description: ''
   });
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadMethod, setUploadMethod] = useState<'url' | 'file'>('file');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -94,6 +96,77 @@ export default function GalleryTab() {
     setFormData({ url: '', title: '', description: '' });
     setIsAdding(false);
     setEditingId(null);
+    setUploadMethod('file');
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: 'Ошибка',
+        description: 'Можно загружать только изображения',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast({
+        title: 'Ошибка',
+        description: 'Размер файла не должен превышать 10 МБ',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      
+      reader.onload = async () => {
+        const base64Data = reader.result as string;
+        
+        const response = await fetch('https://functions.poehali.dev/b09c83ad-8ea7-4412-bd92-a45a3a2d32cd', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            file: base64Data,
+            filename: file.name
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Ошибка загрузки файла');
+        }
+
+        const data = await response.json();
+        setFormData({ ...formData, url: data.url });
+        
+        toast({
+          title: 'Файл загружен',
+          description: 'Фото успешно загружено на сервер'
+        });
+      };
+
+      reader.onerror = () => {
+        throw new Error('Ошибка чтения файла');
+      };
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось загрузить файл. Попробуйте снова.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -122,16 +195,64 @@ export default function GalleryTab() {
           {(isAdding || editingId) && (
             <form onSubmit={handleSubmit} className="space-y-4 mb-6 p-4 border rounded-lg bg-muted/50">
               <div className="space-y-2">
-                <Label htmlFor="photo-url">URL фотографии *</Label>
-                <Input
-                  id="photo-url"
-                  type="url"
-                  value={formData.url}
-                  onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                  placeholder="https://example.com/photo.jpg"
-                  required
-                />
+                <Label>Способ добавления</Label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={uploadMethod === 'file' ? 'default' : 'outline'}
+                    onClick={() => setUploadMethod('file')}
+                    className="flex-1"
+                  >
+                    <Icon name="Upload" size={16} className="mr-2" />
+                    Загрузить файл
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={uploadMethod === 'url' ? 'default' : 'outline'}
+                    onClick={() => setUploadMethod('url')}
+                    className="flex-1"
+                  >
+                    <Icon name="Link" size={16} className="mr-2" />
+                    Вставить URL
+                  </Button>
+                </div>
               </div>
+              {uploadMethod === 'url' ? (
+                <div className="space-y-2">
+                  <Label htmlFor="photo-url">URL фотографии *</Label>
+                  <Input
+                    id="photo-url"
+                    type="url"
+                    value={formData.url}
+                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                    placeholder="https://example.com/photo.jpg"
+                    required
+                  />
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="photo-file">Выберите файл *</Label>
+                  <Input
+                    id="photo-file"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    disabled={isUploading}
+                  />
+                  {isUploading && (
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <Icon name="Loader2" size={16} className="animate-spin" />
+                      Загрузка файла...
+                    </p>
+                  )}
+                  {formData.url && !isUploading && (
+                    <p className="text-sm text-green-600 flex items-center gap-2">
+                      <Icon name="CheckCircle" size={16} />
+                      Файл загружен
+                    </p>
+                  )}
+                </div>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="photo-title">Название *</Label>
                 <Input
