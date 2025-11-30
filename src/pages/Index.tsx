@@ -327,8 +327,6 @@ const Index = () => {
         setSelectedSport={setSelectedSport}
       />
 
-      <PhotoGallery />
-
       <FeedbackSection
         handleFeedbackSubmit={handleFeedbackSubmit}
         captcha={captcha}
@@ -337,6 +335,8 @@ const Index = () => {
       />
 
       <FooterSections contacts={contacts} />
+
+      <PhotoGallery />
 
       <AdminPanel
         isOpen={isAdminPanelOpen}
