@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 import { ContactsTab } from '@/components/admin/ContactsTab';
 import { SportsTab } from '@/components/admin/SportsTab';
 import { DocumentsTab } from '@/components/admin/DocumentsTab';
@@ -45,7 +45,6 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
     benefits: 'idle',
     schedule: 'idle'
   });
-  const toastHook = useToast();
 
   useEffect(() => {
     if (isOpen) {
@@ -129,7 +128,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
       
       if (response.ok) {
         onUpdateSports(editedSports);
-        toastHook.toast({
+        toast({
           title: 'Виды спорта обновлены',
           description: 'Изменения успешно сохранены в базе данных',
         });
@@ -137,7 +136,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         throw new Error('Failed to save');
       }
     } catch (error) {
-      toastHook.toast({
+      toast({
         title: 'Ошибка',
         description: 'Не удалось сохранить изменения',
         variant: 'destructive'
@@ -200,7 +199,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-      toastHook.toast({
+      toast({
         title: 'Ошибка',
         description: 'Можно загружать только PDF файлы',
         variant: 'destructive'
@@ -231,7 +230,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
 
           if (response.ok) {
             setUploadStatus(prev => ({ ...prev, [docType]: 'success' }));
-            toastHook.toast({
+            toast({
               title: 'Документ загружен',
               description: `Файл ${file.name} успешно загружен`,
             });
@@ -243,7 +242,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
           }
         } catch (error) {
           setUploadStatus(prev => ({ ...prev, [docType]: 'error' }));
-          toastHook.toast({
+          toast({
             title: 'Ошибка',
             description: 'Не удалось загрузить документ',
             variant: 'destructive'
@@ -257,7 +256,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
       reader.readAsDataURL(file);
     } catch (error) {
       setUploadStatus(prev => ({ ...prev, [docType]: 'error' }));
-      toastHook.toast({
+      toast({
         title: 'Ошибка',
         description: 'Не удалось прочитать файл',
         variant: 'destructive'
