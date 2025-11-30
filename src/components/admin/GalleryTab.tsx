@@ -226,7 +226,6 @@ export default function GalleryTab() {
                     value={formData.url}
                     onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                     placeholder="https://example.com/photo.jpg"
-                    required
                   />
                 </div>
               ) : (
@@ -246,10 +245,17 @@ export default function GalleryTab() {
                     </p>
                   )}
                   {formData.url && !isUploading && (
-                    <p className="text-sm text-green-600 flex items-center gap-2">
-                      <Icon name="CheckCircle" size={16} />
-                      Файл загружен
-                    </p>
+                    <div className="space-y-2">
+                      <p className="text-sm text-green-600 flex items-center gap-2">
+                        <Icon name="CheckCircle" size={16} />
+                        Файл загружен
+                      </p>
+                      <img 
+                        src={formData.url} 
+                        alt="Preview" 
+                        className="w-full h-32 object-cover rounded-md border"
+                      />
+                    </div>
                   )}
                 </div>
               )}
