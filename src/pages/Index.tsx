@@ -334,9 +334,9 @@ const Index = () => {
         setCaptchaInput={setCaptchaInput}
       />
 
-      <FooterSections contacts={contacts} />
-
       <PhotoGallery />
+
+      <FooterSections contacts={contacts} />
 
       <AdminPanel
         isOpen={isAdminPanelOpen}
