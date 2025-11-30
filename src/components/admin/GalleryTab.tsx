@@ -262,6 +262,7 @@ export default function GalleryTab() {
                     id="photo-file"
                     type="file"
                     accept="image/*"
+                    capture="environment"
                     onChange={handleFileSelect}
                     disabled={isUploading}
                   />
