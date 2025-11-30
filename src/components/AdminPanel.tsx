@@ -74,17 +74,11 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
 
   const handleSaveContacts = async () => {
     console.log('=== handleSaveContacts START ===');
-    console.log('editedContacts:', editedContacts);
     
     try {
       const url = `https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b?_t=${Date.now()}`;
-      const payload = {
-        type: 'contacts',
-        data: editedContacts
-      };
       
-      console.log('Request URL:', url);
-      console.log('Request payload:', payload);
+      console.log('Sending request to:', url);
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -92,37 +86,29 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
           'Content-Type': 'application/json',
         },
         cache: 'no-store',
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          type: 'contacts',
+          data: editedContacts
+        })
       });
       
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
+      console.log('Response received:', response.status);
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.log('Error response:', errorText);
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        alert(`Ошибка ${response.status}: ${errorText}`);
+        return;
       }
       
       const result = await response.json();
-      console.log('Success result:', result);
+      console.log('Success:', result);
       
       onUpdateContacts(editedContacts);
-      toastHook.toast({
-        title: 'Контакты обновлены',
-        description: 'Изменения успешно сохранены в базе данных',
-      });
-    } catch (error) {
-      console.error('=== Save contacts ERROR ===');
-      console.error('Error type:', error?.constructor?.name);
-      console.error('Error message:', error instanceof Error ? error.message : String(error));
-      console.error('Full error:', error);
+      alert('Контакты успешно обновлены!');
       
-      toastHook.toast({
-        title: 'Ошибка',
-        description: error instanceof Error ? error.message : 'Не удалось сохранить изменения',
-        variant: 'destructive'
-      });
+    } catch (err) {
+      console.error('ERROR:', err);
+      alert('Ошибка: ' + (err instanceof Error ? err.message : String(err)));
     }
     
     console.log('=== handleSaveContacts END ===');
