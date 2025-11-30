@@ -101,6 +101,8 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
       
       const result = await response.json();
       console.log('Success:', result);
+      console.log('editedContacts to save:', editedContacts);
+      console.log('onUpdateContacts type:', typeof onUpdateContacts);
       
       onUpdateContacts(editedContacts);
       alert('Контакты успешно обновлены!');
