@@ -9,10 +9,10 @@
       "bodyMatcher": "exact"
     },
     {
-      "name": "Get document without type parameter",
+      "name": "Reject GET requests",
       "method": "GET",
       "path": "/",
-      "expectedStatus": 400,
+      "expectedStatus": 405,
       "expectedBody": {
         "error": "string"
       },
