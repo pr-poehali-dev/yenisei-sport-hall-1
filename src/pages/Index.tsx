@@ -339,8 +339,8 @@ const Index = () => {
         isOpen={isAdminPanelOpen}
         onClose={() => setIsAdminPanelOpen(false)}
         onPasswordChange={handlePasswordChange}
-        onContactsUpdate={handleContactsUpdate}
-        onSportsUpdate={handleSportsUpdate}
+        onUpdateContacts={handleContactsUpdate}
+        onUpdateSports={handleSportsUpdate}
         contacts={contacts}
         sports={sports}
         onUnreadCountChange={loadUnreadCount}
