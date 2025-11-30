@@ -18,6 +18,13 @@ interface ContactsTabProps {
 }
 
 export const ContactsTab = ({ editedContacts, onContactChange, onSave }: ContactsTabProps) => {
+  const handleSaveClick = () => {
+    console.log('ContactsTab: Save button clicked!');
+    console.log('ContactsTab: onSave function type:', typeof onSave);
+    console.log('ContactsTab: editedContacts:', editedContacts);
+    onSave();
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -63,7 +70,7 @@ export const ContactsTab = ({ editedContacts, onContactChange, onSave }: Contact
             onChange={(e) => onContactChange('hours', e.target.value)}
           />
         </div>
-        <Button onClick={onSave} className="w-full">
+        <Button onClick={handleSaveClick} className="w-full">
           <Icon name="Save" size={16} className="mr-2" />
           Сохранить изменения
         </Button>
