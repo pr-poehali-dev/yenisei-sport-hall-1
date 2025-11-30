@@ -21,10 +21,34 @@ export default function PhotoGallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
 
   useEffect(() => {
-    const savedPhotos = localStorage.getItem('galleryPhotos');
-    if (savedPhotos) {
-      setPhotos(JSON.parse(savedPhotos));
-    }
+    const loadPhotos = () => {
+      const savedPhotos = localStorage.getItem('galleryPhotos');
+      if (savedPhotos) {
+        setPhotos(JSON.parse(savedPhotos));
+      }
+    };
+
+    loadPhotos();
+
+    // Обновляем галерею при изменениях в localStorage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'galleryPhotos') {
+        loadPhotos();
+      }
+    };
+
+    // Обновляем галерею при изменениях в текущей вкладке
+    const handleCustomUpdate = () => {
+      loadPhotos();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('galleryUpdate', handleCustomUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('galleryUpdate', handleCustomUpdate);
+    };
   }, []);
 
   if (photos.length === 0) {

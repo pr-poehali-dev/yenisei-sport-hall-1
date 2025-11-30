@@ -31,6 +31,8 @@ export default function GalleryTab() {
   const savePhotos = (newPhotos: GalleryPhoto[]) => {
     localStorage.setItem('galleryPhotos', JSON.stringify(newPhotos));
     setPhotos(newPhotos);
+    // Уведомляем другие компоненты об обновлении
+    window.dispatchEvent(new Event('galleryUpdate'));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
