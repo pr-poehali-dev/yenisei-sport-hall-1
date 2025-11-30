@@ -258,15 +258,46 @@ export default function GalleryTab() {
                   />
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <Label htmlFor="photo-file">Выберите файл *</Label>
+                <div className="space-y-3">
+                  <Label>Выберите источник *</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-auto py-4 flex flex-col gap-2"
+                      onClick={() => document.getElementById('photo-from-camera')?.click()}
+                      disabled={isUploading}
+                    >
+                      <Icon name="Camera" size={24} />
+                      <span className="text-sm">Камера</span>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="h-auto py-4 flex flex-col gap-2"
+                      onClick={() => document.getElementById('photo-from-gallery')?.click()}
+                      disabled={isUploading}
+                    >
+                      <Icon name="Image" size={24} />
+                      <span className="text-sm">Галерея</span>
+                    </Button>
+                  </div>
                   <Input
-                    id="photo-file"
+                    id="photo-from-camera"
                     type="file"
                     accept="image/*"
                     capture="environment"
                     onChange={handleFileSelect}
                     disabled={isUploading}
+                    className="hidden"
+                  />
+                  <Input
+                    id="photo-from-gallery"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    disabled={isUploading}
+                    className="hidden"
                   />
                   {isUploading && (
                     <p className="text-sm text-muted-foreground flex items-center gap-2">
