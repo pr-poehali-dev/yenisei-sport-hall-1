@@ -103,6 +103,8 @@ export default function GalleryTab() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    console.log('File selected:', file.name, file.size, file.type);
+
     if (!file.type.startsWith('image/')) {
       toast({
         title: 'Ошибка',
@@ -125,46 +127,71 @@ export default function GalleryTab() {
 
     try {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
       
       reader.onload = async () => {
-        const base64Data = reader.result as string;
-        
-        const response = await fetch('https://functions.poehali.dev/b09c83ad-8ea7-4412-bd92-a45a3a2d32cd', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            file: base64Data,
-            filename: file.name
-          })
-        });
+        try {
+          const base64Data = reader.result as string;
+          
+          console.log('Uploading file to server...');
+          
+          const response = await fetch('https://functions.poehali.dev/b09c83ad-8ea7-4412-bd92-a45a3a2d32cd', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              file: base64Data,
+              filename: file.name
+            })
+          });
 
-        if (!response.ok) {
-          throw new Error('Ошибка загрузки файла');
+          console.log('Response status:', response.status);
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Upload failed:', errorData);
+            throw new Error(errorData.error || 'Ошибка загрузки файла');
+          }
+
+          const data = await response.json();
+          console.log('Upload successful:', data);
+          
+          setFormData(prev => ({ ...prev, url: data.url }));
+          
+          toast({
+            title: 'Файл загружен',
+            description: 'Фото успешно загружено на сервер'
+          });
+        } catch (uploadError) {
+          console.error('Upload error:', uploadError);
+          toast({
+            title: 'Ошибка',
+            description: uploadError instanceof Error ? uploadError.message : 'Не удалось загрузить файл',
+            variant: 'destructive'
+          });
+        } finally {
+          setIsUploading(false);
         }
-
-        const data = await response.json();
-        setFormData({ ...formData, url: data.url });
-        
-        toast({
-          title: 'Файл загружен',
-          description: 'Фото успешно загружено на сервер'
-        });
       };
 
       reader.onerror = () => {
-        throw new Error('Ошибка чтения файла');
+        console.error('FileReader error');
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось прочитать файл',
+          variant: 'destructive'
+        });
+        setIsUploading(false);
       };
+
+      reader.readAsDataURL(file);
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('General error:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось загрузить файл. Попробуйте снова.',
+        description: 'Произошла ошибка при загрузке',
         variant: 'destructive'
       });
-    } finally {
       setIsUploading(false);
     }
   };
