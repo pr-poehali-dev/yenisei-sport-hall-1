@@ -119,6 +119,7 @@ const Header = ({
           <MobileMenu 
             isAdmin={isAdmin}
             onAdminPanelOpen={() => setIsAdminPanelOpen(true)}
+            onAdminLoginOpen={() => setIsAdminLoginOpen(true)}
             onAdminLogout={handleAdminLogout}
             unreadCount={unreadCount}
           />
