@@ -294,6 +294,11 @@ const FooterSections = ({ contacts }: FooterSectionsProps) => {
                     ООО "Каркас"
                   </a>
                 </li>
+                <li>
+                  <span className="text-primary-foreground/80">
+                    ООО "ААА+"
+                  </span>
+                </li>
               </ul>
             </div>
 
