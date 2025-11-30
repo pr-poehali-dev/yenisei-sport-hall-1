@@ -37,8 +37,9 @@ const Header = ({
     const answer = formData.get('secret-answer') as string;
     const newPassword = formData.get('new-password') as string;
     
-    // Секретный вопрос: "Название спортивного зала"
-    if (answer.toLowerCase().trim() === 'енисей') {
+    const correctAnswer = localStorage.getItem('secretAnswer') || 'енисей';
+    
+    if (answer.toLowerCase().trim() === correctAnswer.toLowerCase().trim()) {
       localStorage.setItem('adminPassword', newPassword);
       setResetSuccess('Пароль успешно изменен! Теперь войдите с новым паролем.');
       setResetError('');
@@ -51,6 +52,8 @@ const Header = ({
       setResetSuccess('');
     }
   };
+
+  const secretQuestion = localStorage.getItem('secretQuestion') || 'Как называется спортивный зал?';
 
   return (
     <header className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50">
@@ -144,7 +147,7 @@ const Header = ({
                   <div className="space-y-2">
                     <Label htmlFor="secret-question">Секретный вопрос</Label>
                     <p className="text-sm text-muted-foreground">
-                      Как называется спортивный зал?
+                      {secretQuestion}
                     </p>
                     <Input 
                       id="secret-answer"
