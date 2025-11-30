@@ -31,16 +31,8 @@ const Header = ({
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           <div className="flex items-center gap-3">
-            <img 
-              src="https://cdn.poehali.dev/projects/a9506489-63c9-42b2-9de9-54615ceeaf14/files/0b5f1c06-61b0-4ea6-b742-5cfe02f97d0f.png" 
-              alt="Логотип" 
-              className="w-12 h-12 md:w-16 md:h-16 object-contain"
-            />
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">Спортивный зал "Енисей"</h1>
-              <p className="text-sm text-primary-foreground/80 hidden md:block">
-                Центр здоровья и активного образа жизни
-              </p>
             </div>
           </div>
           
