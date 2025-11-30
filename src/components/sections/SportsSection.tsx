@@ -26,7 +26,7 @@ const SportsSection = ({ sports, selectedSport, setSelectedSport }: SportsSectio
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-4xl font-bold mb-6 text-foreground">
-              Добро пожаловать в спортивный зал "Енисей"
+              Бизнес-спринт (Я выбираю спорт)
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
               Современный спортивный комплекс для занятий игровыми видами спорта. 
