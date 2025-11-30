@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "Get active feedback list",
+      "method": "GET",
+      "path": "/?archived=false",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "feedback": "array",
+        "total_count": "number",
+        "unread_count": "number",
+        "archived_count": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get archived feedback list",
+      "method": "GET",
+      "path": "/?archived=true",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "feedback": "array",
+        "total_count": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

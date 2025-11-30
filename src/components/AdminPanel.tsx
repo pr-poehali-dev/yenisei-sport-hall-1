@@ -55,9 +55,18 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
 
   const loadFeedbackStats = async () => {
     try {
-      const response = await fetch('https://functions.poehali.dev/9f020406-6628-478f-ada2-5920d21f64b2');
-      const data = await response.json();
-      setFeedbackStats(data);
+      const response = await fetch('https://functions.poehali.dev/56afe0b0-2d50-4a7c-9498-8cfc3b2df974?archived=false');
+      const activeData = await response.json();
+      
+      const archivedResponse = await fetch('https://functions.poehali.dev/56afe0b0-2d50-4a7c-9498-8cfc3b2df974?archived=true');
+      const archivedData = await archivedResponse.json();
+      
+      setFeedbackStats({
+        feedback: [...activeData.feedback, ...archivedData.feedback],
+        total_count: activeData.total_count,
+        unread_count: activeData.unread_count,
+        archived_count: activeData.archived_count
+      });
     } catch (error) {
       console.error('Failed to load feedback stats:', error);
     }

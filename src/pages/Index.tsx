@@ -85,9 +85,9 @@ const Index = () => {
   const loadUnreadCount = async () => {
     if (!isAdmin) return;
     try {
-      const response = await fetch('https://functions.poehali.dev/9f020406-6628-478f-ada2-5920d21f64b2');
+      const response = await fetch('https://functions.poehali.dev/56afe0b0-2d50-4a7c-9498-8cfc3b2df974?archived=false');
       const data = await response.json();
-      setUnreadCount(data.total_count || 0);
+      setUnreadCount(data.unread_count || 0);
     } catch (error) {
       console.error('Failed to load unread count:', error);
     }
