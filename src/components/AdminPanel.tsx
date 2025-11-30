@@ -73,41 +73,33 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
   };
 
   const handleSaveContacts = async () => {
-    console.log('Saving contacts:', editedContacts);
     try {
-      const response = await fetch('https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b', {
+      const url = 'https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b';
+      const payload = {
+        type: 'contacts',
+        data: editedContacts
+      };
+      
+      const response = await fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          type: 'contacts',
-          data: editedContacts
-        }),
-        cache: 'no-cache'
+        body: JSON.stringify(payload)
       });
       
-      console.log('Save contacts response:', response.status, response.statusText);
-      
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Save result:', result);
-        onUpdateContacts(editedContacts);
-        toast({
-          title: 'Контакты обновлены',
-          description: 'Изменения успешно сохранены в базе данных',
-        });
-      } else {
-        const errorText = await response.text().catch(() => 'Unknown error');
-        console.error('Save failed:', response.status, errorText);
-        toast({
-          title: 'Ошибка сохранения',
-          description: `Статус: ${response.status}. ${errorText}`,
-          variant: 'destructive'
-        });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
+      
+      const result = await response.json();
+      
+      onUpdateContacts(editedContacts);
+      toast({
+        title: 'Контакты обновлены',
+        description: 'Изменения успешно сохранены в базе данных',
+      });
     } catch (error) {
-      console.error('Save error:', error);
       toast({
         title: 'Ошибка',
         description: error instanceof Error ? error.message : 'Не удалось сохранить изменения',
