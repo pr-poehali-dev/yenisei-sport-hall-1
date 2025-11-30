@@ -57,12 +57,12 @@ const SportsSection = ({ sports, selectedSport, setSelectedSport }: SportsSectio
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Icon name="Trophy" size={24} className="text-primary" />
-                    {sport.name}
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-1 text-base">
+                    <Icon name="Trophy" size={18} className="text-primary flex-shrink-0" />
+                    <span className="line-clamp-1">{sport.name}</span>
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-xs line-clamp-2">
                     Узнайте правила игры и требования безопасности
                   </CardDescription>
                 </CardHeader>
