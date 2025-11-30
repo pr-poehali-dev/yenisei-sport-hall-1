@@ -7,6 +7,7 @@ import { ContactsTab } from '@/components/admin/ContactsTab';
 import { SportsTab } from '@/components/admin/SportsTab';
 import { DocumentsTab } from '@/components/admin/DocumentsTab';
 import { FeedbackTab } from '@/components/admin/FeedbackTab';
+import { PasswordTab } from '@/components/admin/PasswordTab';
 
 interface Contact {
   address: string;
@@ -31,9 +32,10 @@ interface AdminPanelProps {
   sports: Sport[];
   onUpdateContacts: (contacts: Contact) => void;
   onUpdateSports: (sports: Sport[]) => void;
+  onPasswordChange: (oldPassword: string, newPassword: string) => Promise<boolean>;
 }
 
-const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpdateSports }: AdminPanelProps) => {
+const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpdateSports, onPasswordChange }: AdminPanelProps) => {
   const [editedContacts, setEditedContacts] = useState(contacts);
   const [editedSports, setEditedSports] = useState(sports);
   const [feedbackStats, setFeedbackStats] = useState<any>(null);
@@ -260,11 +262,12 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         </DialogHeader>
 
         <Tabs defaultValue="contacts" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="contacts">Контакты</TabsTrigger>
             <TabsTrigger value="sports">Виды спорта</TabsTrigger>
             <TabsTrigger value="documents">Документы</TabsTrigger>
             <TabsTrigger value="feedback">Отзывы</TabsTrigger>
+            <TabsTrigger value="password">Пароль</TabsTrigger>
           </TabsList>
 
           <TabsContent value="contacts" className="space-y-4">
@@ -300,6 +303,12 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
             <FeedbackTab
               feedbackStats={feedbackStats}
               onRefresh={loadFeedbackStats}
+            />
+          </TabsContent>
+
+          <TabsContent value="password" className="space-y-4">
+            <PasswordTab
+              onPasswordChange={onPasswordChange}
             />
           </TabsContent>
         </Tabs>

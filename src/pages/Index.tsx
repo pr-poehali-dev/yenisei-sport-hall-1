@@ -17,6 +17,7 @@ const Index = () => {
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('admin2025');
   const [loginError, setLoginError] = useState('');
   const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, answer: 0 });
   const [captchaInput, setCaptchaInput] = useState('');
@@ -50,6 +51,12 @@ const Index = () => {
     loadContent();
     
     const adminSession = localStorage.getItem('adminSession');
+    const savedPassword = localStorage.getItem('adminPassword');
+    
+    if (savedPassword) {
+      setAdminPassword(savedPassword);
+    }
+    
     if (adminSession) {
       const session = JSON.parse(adminSession);
       if (session.expiresAt > Date.now()) {
@@ -260,7 +267,7 @@ const Index = () => {
     const login = formData.get('login') as string;
     const password = formData.get('password') as string;
 
-    if (login === 'admin' && password === 'admin2025') {
+    if (login === 'admin' && password === adminPassword) {
       const session = {
         expiresAt: Date.now() + 24 * 60 * 60 * 1000
       };
@@ -276,6 +283,17 @@ const Index = () => {
     } else {
       setLoginError('Неверный логин или пароль');
     }
+  };
+
+  const handlePasswordChange = async (oldPassword: string, newPassword: string): Promise<boolean> => {
+    if (oldPassword !== adminPassword) {
+      return false;
+    }
+    
+    setAdminPassword(newPassword);
+    localStorage.setItem('adminPassword', newPassword);
+    
+    return true;
   };
 
   const handleAdminLogout = () => {
@@ -874,6 +892,7 @@ const Index = () => {
         sports={sports}
         onUpdateContacts={setContacts}
         onUpdateSports={setSports}
+        onPasswordChange={handlePasswordChange}
       />
     </div>
   );
