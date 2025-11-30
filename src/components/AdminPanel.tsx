@@ -73,12 +73,18 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
   };
 
   const handleSaveContacts = async () => {
+    console.log('=== handleSaveContacts START ===');
+    console.log('editedContacts:', editedContacts);
+    
     try {
       const url = `https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b?_t=${Date.now()}`;
       const payload = {
         type: 'contacts',
         data: editedContacts
       };
+      
+      console.log('Request URL:', url);
+      console.log('Request payload:', payload);
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -89,12 +95,17 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         body: JSON.stringify(payload)
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
       if (!response.ok) {
         const errorText = await response.text();
+        console.log('Error response:', errorText);
         throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
       
       const result = await response.json();
+      console.log('Success result:', result);
       
       onUpdateContacts(editedContacts);
       toast({
@@ -102,13 +113,19 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         description: 'Изменения успешно сохранены в базе данных',
       });
     } catch (error) {
-      console.error('Save contacts error:', error);
+      console.error('=== Save contacts ERROR ===');
+      console.error('Error type:', error?.constructor?.name);
+      console.error('Error message:', error instanceof Error ? error.message : String(error));
+      console.error('Full error:', error);
+      
       toast({
         title: 'Ошибка',
         description: error instanceof Error ? error.message : 'Не удалось сохранить изменения',
         variant: 'destructive'
       });
     }
+    
+    console.log('=== handleSaveContacts END ===');
   };
 
   const handleSaveSports = async () => {
