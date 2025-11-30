@@ -8,6 +8,7 @@ import { SportsTab } from '@/components/admin/SportsTab';
 import { DocumentsTab } from '@/components/admin/DocumentsTab';
 import { FeedbackTab } from '@/components/admin/FeedbackTab';
 import { PasswordTab } from '@/components/admin/PasswordTab';
+import GalleryTab from '@/components/admin/GalleryTab';
 
 interface Contact {
   address: string;
@@ -283,7 +284,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         </DialogHeader>
 
         <Tabs defaultValue="contacts" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-1 h-auto">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 gap-1 h-auto">
             <TabsTrigger value="contacts" className="text-xs md:text-sm py-2">
               <span className="hidden md:inline">Контакты</span>
               <span className="md:hidden flex items-center gap-1">
@@ -296,6 +297,13 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
               <span className="md:hidden flex items-center gap-1">
                 <Icon name="Dumbbell" size={14} />
                 Спорт
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="gallery" className="text-xs md:text-sm py-2">
+              <span className="hidden md:inline">Фотогалерея</span>
+              <span className="md:hidden flex items-center gap-1">
+                <Icon name="Image" size={14} />
+                Фото
               </span>
             </TabsTrigger>
             <TabsTrigger value="documents" className="text-xs md:text-sm py-2">
@@ -313,7 +321,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
               </span>
             </TabsTrigger>
             <TabsTrigger value="password" className="text-xs md:text-sm py-2">
-              <span className="hidden md:inline">Пароль</span>
+              <span className="hidden md:inline">Безопасность</span>
               <span className="md:hidden flex items-center gap-1">
                 <Icon name="Lock" size={14} />
                 Пароль
@@ -341,6 +349,10 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
               onRemoveSafety={removeSportSafety}
               onSave={handleSaveSports}
             />
+          </TabsContent>
+
+          <TabsContent value="gallery" className="space-y-4">
+            <GalleryTab />
           </TabsContent>
 
           <TabsContent value="documents" className="space-y-4">
