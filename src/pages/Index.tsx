@@ -4,7 +4,6 @@ import AdminPanel from '@/components/AdminPanel';
 import Header from '@/components/sections/Header';
 import SportsSection from '@/components/sections/SportsSection';
 import FeedbackSection from '@/components/sections/FeedbackSection';
-import UsefulSection from '@/components/sections/UsefulSection';
 import FooterSections from '@/components/sections/FooterSections';
 
 const Index = () => {
@@ -335,8 +334,6 @@ const Index = () => {
       />
 
       <FooterSections contacts={contacts} />
-
-      <UsefulSection />
 
       <AdminPanel
         isOpen={isAdminPanelOpen}

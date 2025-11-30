@@ -286,7 +286,9 @@ const FooterSections = ({ contacts }: FooterSectionsProps) => {
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>
                   <a 
-                    href="#useful" 
+                    href="https://rs38.ru/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
                     className="hover:text-primary-foreground hover:underline transition-all"
                   >
                     ООО "Каркас"
