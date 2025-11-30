@@ -83,10 +83,11 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         body: JSON.stringify({
           type: 'contacts',
           data: editedContacts
-        })
+        }),
+        cache: 'no-cache'
       });
       
-      console.log('Save contacts response:', response.status);
+      console.log('Save contacts response:', response.status, response.statusText);
       
       if (response.ok) {
         const result = await response.json();
@@ -97,15 +98,19 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
           description: 'Изменения успешно сохранены в базе данных',
         });
       } else {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Save failed:', response.status, errorData);
-        throw new Error('Failed to save');
+        const errorText = await response.text().catch(() => 'Unknown error');
+        console.error('Save failed:', response.status, errorText);
+        toast({
+          title: 'Ошибка сохранения',
+          description: `Статус: ${response.status}. ${errorText}`,
+          variant: 'destructive'
+        });
       }
     } catch (error) {
       console.error('Save error:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось сохранить изменения',
+        description: error instanceof Error ? error.message : 'Не удалось сохранить изменения',
         variant: 'destructive'
       });
     }
