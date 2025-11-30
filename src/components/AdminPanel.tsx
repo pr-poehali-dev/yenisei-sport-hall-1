@@ -261,7 +261,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl flex items-center gap-2">
+          <DialogTitle className="text-xl md:text-2xl flex items-center gap-2">
             <Icon name="Settings" size={24} />
             Панель администратора
           </DialogTitle>
@@ -271,12 +271,42 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpd
         </DialogHeader>
 
         <Tabs defaultValue="contacts" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="contacts">Контакты</TabsTrigger>
-            <TabsTrigger value="sports">Виды спорта</TabsTrigger>
-            <TabsTrigger value="documents">Документы</TabsTrigger>
-            <TabsTrigger value="feedback">Отзывы</TabsTrigger>
-            <TabsTrigger value="password">Пароль</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-1 h-auto">
+            <TabsTrigger value="contacts" className="text-xs md:text-sm py-2">
+              <span className="hidden md:inline">Контакты</span>
+              <span className="md:hidden flex items-center gap-1">
+                <Icon name="MapPin" size={14} />
+                Контакты
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="sports" className="text-xs md:text-sm py-2">
+              <span className="hidden md:inline">Виды спорта</span>
+              <span className="md:hidden flex items-center gap-1">
+                <Icon name="Dumbbell" size={14} />
+                Спорт
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="text-xs md:text-sm py-2">
+              <span className="hidden md:inline">Документы</span>
+              <span className="md:hidden flex items-center gap-1">
+                <Icon name="FileText" size={14} />
+                Файлы
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="feedback" className="text-xs md:text-sm py-2">
+              <span className="hidden md:inline">Отзывы</span>
+              <span className="md:hidden flex items-center gap-1">
+                <Icon name="MessageSquare" size={14} />
+                Отзывы
+              </span>
+            </TabsTrigger>
+            <TabsTrigger value="password" className="text-xs md:text-sm py-2">
+              <span className="hidden md:inline">Пароль</span>
+              <span className="md:hidden flex items-center gap-1">
+                <Icon name="Lock" size={14} />
+                Пароль
+              </span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="contacts" className="space-y-4">
