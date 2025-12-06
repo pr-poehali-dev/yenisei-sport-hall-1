@@ -120,6 +120,57 @@ export default function GalleryTab() {
     setUploadMethod('file');
   };
 
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          const MAX_WIDTH = 1920;
+          const MAX_HEIGHT = 1080;
+          
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height = height * (MAX_WIDTH / width);
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width = width * (MAX_HEIGHT / height);
+              height = MAX_HEIGHT;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Не удалось создать canvas'));
+            return;
+          }
+          
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          const quality = 0.8;
+          const compressedData = canvas.toDataURL('image/jpeg', quality);
+          resolve(compressedData);
+        };
+        
+        img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
+        img.src = e.target?.result as string;
+      };
+      
+      reader.onerror = () => reject(new Error('Не удалось прочитать файл'));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -147,72 +198,49 @@ export default function GalleryTab() {
     setIsUploading(true);
 
     try {
-      const reader = new FileReader();
+      const originalSize = file.size;
+      console.log('Сжимаю изображение...');
       
-      reader.onload = async () => {
-        try {
-          const base64Data = reader.result as string;
-          
-          console.log('Uploading file to server...');
-          
-          const response = await fetch('https://functions.poehali.dev/b09c83ad-8ea7-4412-bd92-a45a3a2d32cd', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              file: base64Data,
-              filename: file.name
-            })
-          });
+      const compressedData = await compressImage(file);
+      const compressedSize = Math.round((compressedData.length * 3) / 4);
+      const savedPercent = Math.round(((originalSize - compressedSize) / originalSize) * 100);
+      
+      console.log(`Сжато: ${(originalSize / 1024).toFixed(0)}KB → ${(compressedSize / 1024).toFixed(0)}KB (−${savedPercent}%)`);
+      
+      const response = await fetch('https://functions.poehali.dev/b09c83ad-8ea7-4412-bd92-a45a3a2d32cd', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          file: compressedData,
+          filename: file.name
+        })
+      });
 
-          console.log('Response status:', response.status);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Upload failed:', errorData);
+        throw new Error(errorData.error || 'Ошибка загрузки файла');
+      }
 
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Upload failed:', errorData);
-            throw new Error(errorData.error || 'Ошибка загрузки файла');
-          }
-
-          const data = await response.json();
-          console.log('Upload successful:', data);
-          
-          setFormData(prev => ({ ...prev, url: data.url }));
-          
-          toast({
-            title: 'Файл загружен',
-            description: 'Фото успешно загружено на сервер'
-          });
-        } catch (uploadError) {
-          console.error('Upload error:', uploadError);
-          toast({
-            title: 'Ошибка',
-            description: uploadError instanceof Error ? uploadError.message : 'Не удалось загрузить файл',
-            variant: 'destructive'
-          });
-        } finally {
-          setIsUploading(false);
-        }
-      };
-
-      reader.onerror = () => {
-        console.error('FileReader error');
-        toast({
-          title: 'Ошибка',
-          description: 'Не удалось прочитать файл',
-          variant: 'destructive'
-        });
-        setIsUploading(false);
-      };
-
-      reader.readAsDataURL(file);
+      const data = await response.json();
+      console.log('Upload successful:', data);
+      
+      setFormData(prev => ({ ...prev, url: data.url }));
+      
+      toast({
+        title: 'Фото загружено',
+        description: `Размер уменьшен на ${savedPercent}%`
+      });
     } catch (error) {
-      console.error('General error:', error);
+      console.error('Upload error:', error);
       toast({
         title: 'Ошибка',
-        description: 'Произошла ошибка при загрузке',
+        description: error instanceof Error ? error.message : 'Не удалось загрузить файл',
         variant: 'destructive'
       });
+    } finally {
       setIsUploading(false);
     }
   };
