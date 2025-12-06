@@ -28,6 +28,12 @@ const Index = () => {
     hours: 'Ежедневно: 08:00 - 22:00'
   });
 
+  const [partners, setPartners] = useState([
+    { name: 'Министерство спорта РФ', url: 'https://minsport.gov.ru/' },
+    { name: 'Министерство спорта Красноярского края', url: 'http://kraysport.ru/' },
+    { name: 'Правительство Красноярского края', url: 'http://www.krskstate.ru/' }
+  ]);
+
   useEffect(() => {
     const loadContent = async () => {
       try {
@@ -39,6 +45,9 @@ const Index = () => {
         }
         if (data.sports) {
           setSports(data.sports);
+        }
+        if (data.partners) {
+          setPartners(data.partners);
         }
       } catch (error) {
         console.error('Failed to load content:', error);
@@ -308,6 +317,10 @@ const Index = () => {
     setSports(newSports);
   };
 
+  const handlePartnersUpdate = (newPartners: typeof partners) => {
+    setPartners(newPartners);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header
@@ -336,7 +349,7 @@ const Index = () => {
 
       <PhotoGallery />
 
-      <FooterSections contacts={contacts} />
+      <FooterSections contacts={contacts} partners={partners} />
 
       <AdminPanel
         isOpen={isAdminPanelOpen}
@@ -344,9 +357,10 @@ const Index = () => {
         onPasswordChange={handlePasswordChange}
         onUpdateContacts={handleContactsUpdate}
         onUpdateSports={handleSportsUpdate}
+        onUpdatePartners={handlePartnersUpdate}
         contacts={contacts}
         sports={sports}
-        onUnreadCountChange={loadUnreadCount}
+        partners={partners}
       />
     </div>
   );

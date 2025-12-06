@@ -10,11 +10,17 @@ interface Contacts {
   hours: string;
 }
 
-interface FooterSectionsProps {
-  contacts: Contacts;
+interface Partner {
+  name: string;
+  url: string;
 }
 
-const FooterSections = ({ contacts }: FooterSectionsProps) => {
+interface FooterSectionsProps {
+  contacts: Contacts;
+  partners?: Partner[];
+}
+
+const FooterSections = ({ contacts, partners = [] }: FooterSectionsProps) => {
   return (
     <>
       <section id="about" className="pt-4 pb-12 bg-background">
@@ -236,69 +242,28 @@ const FooterSections = ({ contacts }: FooterSectionsProps) => {
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
-              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
-                <li>
-                  <a 
-                    href="https://minsport.gov.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Министерство спорта РФ
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="http://kraysport.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all whitespace-nowrap"
-                  >
-                    Министерство спорта Красноярского края
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="http://www.krskstate.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Правительство Красноярского края
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://proekty.er.ru/projects/detskii-sport" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    Партия "Единая Россия"
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="space-y-4">
               <h4 className="text-lg font-semibold mb-4 text-center">Наши партнеры</h4>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
-                <li>
-                  <a 
-                    href="https://rs38.ru/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="hover:text-primary-foreground hover:underline transition-all"
-                  >
-                    ООО "Каркас"
-                  </a>
-                </li>
-                <li>
-                  <span className="text-primary-foreground/80">
-                    ООО "ААА+"
+                {partners.length > 0 ? (
+                  partners.map((partner, index) => (
+                    <li key={index}>
+                      <a 
+                        href={partner.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-primary-foreground hover:underline transition-all"
+                      >
+                        {partner.name}
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <li>
+                    <span className="text-primary-foreground/80">
+                    Партнёры не добавлены
                   </span>
-                </li>
+                  </li>
+                )}
               </ul>
             </div>
 

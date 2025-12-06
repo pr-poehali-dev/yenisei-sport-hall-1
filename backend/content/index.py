@@ -97,6 +97,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'safety': safety
                 })
             
+            cur.execute('SELECT name, url FROM partners ORDER BY display_order')
+            partners_rows = cur.fetchall()
+            partners = [{'name': p['name'], 'url': p['url']} for p in partners_rows]
+            
             cur.close()
             conn.close()
             
@@ -106,7 +110,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'isBase64Encoded': False,
                 'body': json.dumps({
                     'contacts': dict(contacts) if contacts else None,
-                    'sports': sports
+                    'sports': sports,
+                    'partners': partners
                 })
             }
         
@@ -229,6 +234,29 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'headers': headers,
                     'isBase64Encoded': False,
                     'body': json.dumps({'success': True, 'message': 'Виды спорта обновлены'})
+                }
+            
+            if update_type == 'partners':
+                partners_data = body_data.get('data', [])
+                
+                cur.execute("DELETE FROM partners")
+                
+                for idx, partner in enumerate(partners_data):
+                    name = escape_sql_string(partner.get('name'))
+                    url = escape_sql_string(partner.get('url'))
+                    display_order = idx + 1
+                    
+                    cur.execute(f"INSERT INTO partners (name, url, display_order) VALUES ({name}, {url}, {display_order})")
+                
+                conn.commit()
+                cur.close()
+                conn.close()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': headers,
+                    'isBase64Encoded': False,
+                    'body': json.dumps({'success': True, 'message': 'Партнёры обновлены'})
                 }
         
         if method == 'DELETE':
