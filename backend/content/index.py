@@ -231,6 +231,25 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'body': json.dumps({'success': True, 'message': 'Виды спорта обновлены'})
                 }
         
+        if method == 'DELETE':
+            params = event.get('queryStringParameters', {})
+            delete_type = params.get('type')
+            
+            if delete_type == 'gallery':
+                photo_id = int(params.get('id', 0))
+                cur.execute(f"DELETE FROM gallery_photos WHERE id = {photo_id}")
+                conn.commit()
+                
+                cur.close()
+                conn.close()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': headers,
+                    'isBase64Encoded': False,
+                    'body': json.dumps({'success': True, 'message': 'Фото удалено'})
+                }
+        
         cur.close()
         conn.close()
         
