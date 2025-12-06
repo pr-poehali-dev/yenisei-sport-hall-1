@@ -15,6 +15,12 @@ def get_db_connection():
     database_url = os.environ.get('DATABASE_URL')
     return psycopg2.connect(database_url, cursor_factory=RealDictCursor)
 
+def escape_sql_string(value):
+    """Экранирование строк для Simple Query Protocol"""
+    if value is None:
+        return 'NULL'
+    return "'" + str(value).replace("'", "''") + "'"
+
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     method: str = event.get('httpMethod', 'GET')
     
@@ -42,7 +48,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         if method == 'GET':
             params = event.get('queryStringParameters', {})
-            content_type = params.get('type', 'all')
+            content_type = params.get('type', 'all') if params else 'all'
             
             if content_type == 'gallery':
                 cur.execute('SELECT id, url, title, description, created_at FROM gallery_photos ORDER BY created_at DESC')
@@ -75,16 +81,11 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             sports = []
             for sport in sports_rows:
-                cur.execute(
-                    'SELECT rule_text FROM sport_rules WHERE sport_id = %s ORDER BY display_order',
-                    (sport['id'],)
-                )
+                sport_id = escape_sql_string(sport['id'])
+                cur.execute(f"SELECT rule_text FROM sport_rules WHERE sport_id = {sport_id} ORDER BY display_order")
                 rules = [row['rule_text'] for row in cur.fetchall()]
                 
-                cur.execute(
-                    'SELECT safety_text FROM sport_safety WHERE sport_id = %s ORDER BY display_order',
-                    (sport['id'],)
-                )
+                cur.execute(f"SELECT safety_text FROM sport_safety WHERE sport_id = {sport_id} ORDER BY display_order")
                 safety = [row['safety_text'] for row in cur.fetchall()]
                 
                 sports.append({
@@ -115,10 +116,11 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             if post_type == 'gallery':
                 data = body_data.get('data', {})
-                cur.execute(
-                    'INSERT INTO gallery_photos (url, title, description) VALUES (%s, %s, %s) RETURNING id',
-                    (data.get('url'), data.get('title'), data.get('description', ''))
-                )
+                url = escape_sql_string(data.get('url'))
+                title = escape_sql_string(data.get('title'))
+                description = escape_sql_string(data.get('description', ''))
+                
+                cur.execute(f"INSERT INTO gallery_photos (url, title, description) VALUES ({url}, {title}, {description}) RETURNING id")
                 photo_id = cur.fetchone()['id']
                 conn.commit()
                 
@@ -144,12 +146,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             if update_type == 'gallery':
                 data = body_data.get('data', {})
-                photo_id = data.get('id')
+                photo_id = int(data.get('id'))
+                url = escape_sql_string(data.get('url'))
+                title = escape_sql_string(data.get('title'))
+                description = escape_sql_string(data.get('description', ''))
                 
-                cur.execute(
-                    'UPDATE gallery_photos SET url = %s, title = %s, description = %s, updated_at = CURRENT_TIMESTAMP WHERE id = %s',
-                    (data.get('url'), data.get('title'), data.get('description', ''), int(photo_id))
-                )
+                cur.execute(f"UPDATE gallery_photos SET url = {url}, title = {title}, description = {description}, updated_at = CURRENT_TIMESTAMP WHERE id = {photo_id}")
                 conn.commit()
                 
                 cur.close()
@@ -164,10 +166,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             if update_type == 'contacts':
                 data = body_data.get('data', {})
-                cur.execute(
-                    'UPDATE contacts SET address = %s, phone = %s, email = %s, hours = %s, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM contacts ORDER BY id DESC LIMIT 1)',
-                    (data.get('address'), data.get('phone'), data.get('email'), data.get('hours'))
-                )
+                address = escape_sql_string(data.get('address'))
+                phone = escape_sql_string(data.get('phone'))
+                email = escape_sql_string(data.get('email'))
+                hours = escape_sql_string(data.get('hours'))
+                
+                cur.execute(f"UPDATE contacts SET address = {address}, phone = {phone}, email = {email}, hours = {hours}, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM contacts ORDER BY id DESC LIMIT 1)")
                 conn.commit()
                 
                 cur.close()
@@ -184,42 +188,39 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 sports_data = body_data.get('data', [])
                 
                 for sport in sports_data:
-                    cur.execute(
-                        'UPDATE sports SET name = %s, image = %s, video = %s, updated_at = CURRENT_TIMESTAMP WHERE id = %s',
-                        (sport.get('name'), sport.get('image'), sport.get('video'), sport.get('id'))
-                    )
+                    sport_id = escape_sql_string(sport.get('id'))
+                    name = escape_sql_string(sport.get('name'))
+                    image = escape_sql_string(sport.get('image'))
+                    video = escape_sql_string(sport.get('video'))
                     
-                    cur.execute('SELECT id FROM sport_rules WHERE sport_id = %s ORDER BY display_order', (sport['id'],))
+                    cur.execute(f"UPDATE sports SET name = {name}, image = {image}, video = {video}, updated_at = CURRENT_TIMESTAMP WHERE id = {sport_id}")
+                    
+                    cur.execute(f"SELECT id FROM sport_rules WHERE sport_id = {sport_id} ORDER BY display_order")
                     existing_rules = cur.fetchall()
                     
                     for idx, rule in enumerate(sport.get('rules', [])):
+                        rule_text = escape_sql_string(rule)
                         if idx < len(existing_rules):
-                            cur.execute(
-                                'UPDATE sport_rules SET rule_text = %s WHERE id = %s',
-                                (rule, existing_rules[idx]['id'])
-                            )
+                            rule_id = int(existing_rules[idx]['id'])
+                            cur.execute(f"UPDATE sport_rules SET rule_text = {rule_text} WHERE id = {rule_id}")
                         else:
-                            cur.execute(
-                                'INSERT INTO sport_rules (sport_id, rule_text, display_order) VALUES (%s, %s, %s)',
-                                (sport['id'], rule, idx + 1)
-                            )
+                            display_order = idx + 1
+                            cur.execute(f"INSERT INTO sport_rules (sport_id, rule_text, display_order) VALUES ({sport_id}, {rule_text}, {display_order})")
                     
-                    cur.execute('SELECT id FROM sport_safety WHERE sport_id = %s ORDER BY display_order', (sport['id'],))
+                    cur.execute(f"SELECT id FROM sport_safety WHERE sport_id = {sport_id} ORDER BY display_order")
                     existing_safety = cur.fetchall()
                     
                     for idx, safety_item in enumerate(sport.get('safety', [])):
+                        safety_text = escape_sql_string(safety_item)
                         if idx < len(existing_safety):
-                            cur.execute(
-                                'UPDATE sport_safety SET safety_text = %s WHERE id = %s',
-                                (safety_item, existing_safety[idx]['id'])
-                            )
+                            safety_id = int(existing_safety[idx]['id'])
+                            cur.execute(f"UPDATE sport_safety SET safety_text = {safety_text} WHERE id = {safety_id}")
                         else:
-                            cur.execute(
-                                'INSERT INTO sport_safety (sport_id, safety_text, display_order) VALUES (%s, %s, %s)',
-                                (sport['id'], safety_item, idx + 1)
-                            )
+                            display_order = idx + 1
+                            cur.execute(f"INSERT INTO sport_safety (sport_id, safety_text, display_order) VALUES ({sport_id}, {safety_text}, {display_order})")
                 
                 conn.commit()
+                
                 cur.close()
                 conn.close()
                 
@@ -230,32 +231,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'body': json.dumps({'success': True, 'message': 'Виды спорта обновлены'})
                 }
         
-        if method == 'DELETE':
-            params = event.get('queryStringParameters', {})
-            delete_type = params.get('type')
-            
-            if delete_type == 'gallery':
-                photo_id = params.get('id')
-                if not photo_id:
-                    return {
-                        'statusCode': 400,
-                        'headers': headers,
-                        'isBase64Encoded': False,
-                        'body': json.dumps({'error': 'id required'})
-                    }
-                
-                cur.execute('DELETE FROM gallery_photos WHERE id = %s', (int(photo_id),))
-                conn.commit()
-                
-                cur.close()
-                conn.close()
-                
-                return {
-                    'statusCode': 200,
-                    'headers': headers,
-                    'isBase64Encoded': False,
-                    'body': json.dumps({'success': True, 'message': 'Фото удалено'})
-                }
+        cur.close()
+        conn.close()
         
         return {
             'statusCode': 405,
