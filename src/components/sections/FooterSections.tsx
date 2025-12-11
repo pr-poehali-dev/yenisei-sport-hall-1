@@ -242,7 +242,7 @@ const FooterSections = ({ contacts, partners = [] }: FooterSectionsProps) => {
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold mb-4 text-center">Наши партнеры</h4>
+              <h4 className="text-lg font-semibold mb-4 text-center">Поддержка проекта</h4>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 {partners.length > 0 ? (
                   partners.map((partner, index) => (
