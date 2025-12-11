@@ -271,8 +271,18 @@ const FooterSections = ({ contacts, partners = [] }: FooterSectionsProps) => {
               <h4 className="text-lg font-semibold mb-4 text-center">Наши партнеры</h4>
               <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
                 <li>
+                  <a 
+                    href="https://rs38.ru" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-primary-foreground hover:underline transition-all"
+                  >
+                    ООО "Каркас"
+                  </a>
+                </li>
+                <li>
                   <span className="text-primary-foreground/80">
-                    Партнёры не добавлены
+                    ООО "ААА+"
                   </span>
                 </li>
               </ul>
