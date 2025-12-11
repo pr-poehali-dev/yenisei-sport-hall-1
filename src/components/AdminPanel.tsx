@@ -362,10 +362,10 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateConta
               </span>
             </TabsTrigger>
             <TabsTrigger value="partners" className="text-xs md:text-sm py-2">
-              <span className="hidden md:inline">Партнёры</span>
+              <span className="hidden md:inline">Поддержка</span>
               <span className="md:hidden flex items-center gap-1">
                 <Icon name="Users" size={14} />
-                Партнёры
+                Поддержка
               </span>
             </TabsTrigger>
             <TabsTrigger value="password" className="text-xs md:text-sm py-2">
