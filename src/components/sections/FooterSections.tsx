@@ -267,6 +267,16 @@ const FooterSections = ({ contacts, partners = [] }: FooterSectionsProps) => {
               </ul>
             </div>
 
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold mb-4 text-center">Наши партнеры</h4>
+              <ul className="space-y-2 text-primary-foreground/80 text-sm text-center">
+                <li>
+                  <span className="text-primary-foreground/80">
+                    Партнёры не добавлены
+                  </span>
+                </li>
+              </ul>
+            </div>
 
           </div>
           <Separator className="my-6 bg-primary-foreground/20" />
