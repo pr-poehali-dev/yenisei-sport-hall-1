@@ -30,7 +30,7 @@ const Index = () => {
 
   const [partners, setPartners] = useState([
     { name: 'Министерство спорта РФ', url: 'https://minsport.gov.ru/' },
-    { name: 'Министерство спорта Красноярского края', url: 'http://kraysport.ru/' },
+    { name: 'Минспорт Красноярского края', url: 'http://kraysport.ru/' },
     { name: 'Правительство Красноярского края', url: 'http://www.krskstate.ru/' }
   ]);
 
