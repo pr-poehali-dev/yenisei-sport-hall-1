@@ -8,7 +8,6 @@ import { SportsTab } from '@/components/admin/SportsTab';
 import { DocumentsTab } from '@/components/admin/DocumentsTab';
 import { FeedbackTab } from '@/components/admin/FeedbackTab';
 import { PasswordTab } from '@/components/admin/PasswordTab';
-import { PartnersTab, Partner } from '@/components/admin/PartnersTab';
 
 interface Contact {
   address: string;
@@ -31,17 +30,14 @@ interface AdminPanelProps {
   onClose: () => void;
   contacts: Contact;
   sports: Sport[];
-  partners: Partner[];
   onUpdateContacts: (contacts: Contact) => void;
   onUpdateSports: (sports: Sport[]) => void;
-  onUpdatePartners: (partners: Partner[]) => void;
   onPasswordChange: (oldPassword: string, newPassword: string) => Promise<boolean>;
 }
 
-const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateContacts, onUpdateSports, onUpdatePartners, onPasswordChange }: AdminPanelProps) => {
+const AdminPanel = ({ isOpen, onClose, contacts, sports, onUpdateContacts, onUpdateSports, onPasswordChange }: AdminPanelProps) => {
   const [editedContacts, setEditedContacts] = useState(contacts);
   const [editedSports, setEditedSports] = useState(sports);
-  const [editedPartners, setEditedPartners] = useState(partners);
   const [feedbackStats, setFeedbackStats] = useState<any>(null);
   const [uploadStatus, setUploadStatus] = useState<Record<string, 'idle' | 'uploading' | 'success' | 'error'>>({
     rules: 'idle',
@@ -59,8 +55,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateConta
   useEffect(() => {
     setEditedContacts(contacts);
     setEditedSports(sports);
-    setEditedPartners(partners);
-  }, [contacts, sports, partners]);
+  }, [contacts, sports]);
 
   const loadFeedbackStats = async () => {
     try {
@@ -143,37 +138,6 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateConta
         toast({
           title: 'Виды спорта обновлены',
           description: 'Изменения успешно сохранены в базе данных',
-        });
-      } else {
-        throw new Error('Failed to save');
-      }
-    } catch (error) {
-      toast({
-        title: 'Ошибка',
-        description: 'Не удалось сохранить изменения',
-        variant: 'destructive'
-      });
-    }
-  };
-
-  const handleSavePartners = async () => {
-    try {
-      const response = await fetch('https://functions.poehali.dev/21d3a217-68ef-4999-967c-a520ffcd414b', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'partners',
-          data: editedPartners
-        })
-      });
-      
-      if (response.ok) {
-        onUpdatePartners(editedPartners);
-        toast({
-          title: 'Партнёры обновлены',
-          description: 'Изменения успешно сохранены',
         });
       } else {
         throw new Error('Failed to save');
@@ -354,13 +318,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateConta
                 Отзывы
               </span>
             </TabsTrigger>
-            <TabsTrigger value="partners" className="text-xs md:text-sm py-2">
-              <span className="hidden md:inline">Поддержка</span>
-              <span className="md:hidden flex items-center gap-1">
-                <Icon name="Users" size={14} />
-                Поддержка
-              </span>
-            </TabsTrigger>
+
             <TabsTrigger value="password" className="text-xs md:text-sm py-2">
               <span className="hidden md:inline">Безопасность</span>
               <span className="md:hidden flex items-center gap-1">
@@ -403,13 +361,6 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateConta
             <FeedbackTab
               feedbackStats={feedbackStats}
               onRefresh={loadFeedbackStats}
-            />
-          </TabsContent>
-
-          <TabsContent value="partners" className="space-y-4">
-            <PartnersTab
-              partners={editedPartners}
-              onUpdate={handleSavePartners}
             />
           </TabsContent>
 

@@ -316,10 +316,6 @@ const Index = () => {
     setSports(newSports);
   };
 
-  const handlePartnersUpdate = (newPartners: typeof partners) => {
-    setPartners(newPartners);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header
@@ -354,10 +350,8 @@ const Index = () => {
         onPasswordChange={handlePasswordChange}
         onUpdateContacts={handleContactsUpdate}
         onUpdateSports={handleSportsUpdate}
-        onUpdatePartners={handlePartnersUpdate}
         contacts={contacts}
         sports={sports}
-        partners={partners}
       />
     </div>
   );
