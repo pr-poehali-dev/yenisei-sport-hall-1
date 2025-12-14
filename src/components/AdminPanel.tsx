@@ -8,7 +8,6 @@ import { SportsTab } from '@/components/admin/SportsTab';
 import { DocumentsTab } from '@/components/admin/DocumentsTab';
 import { FeedbackTab } from '@/components/admin/FeedbackTab';
 import { PasswordTab } from '@/components/admin/PasswordTab';
-import GalleryTab from '@/components/admin/GalleryTab';
 import { PartnersTab, Partner } from '@/components/admin/PartnersTab';
 
 interface Contact {
@@ -340,13 +339,7 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateConta
                 Спорт
               </span>
             </TabsTrigger>
-            <TabsTrigger value="gallery" className="text-xs md:text-sm py-2">
-              <span className="hidden md:inline">Фотогалерея</span>
-              <span className="md:hidden flex items-center gap-1">
-                <Icon name="Image" size={14} />
-                Фото
-              </span>
-            </TabsTrigger>
+
             <TabsTrigger value="documents" className="text-xs md:text-sm py-2">
               <span className="hidden md:inline">Документы</span>
               <span className="md:hidden flex items-center gap-1">
@@ -397,10 +390,6 @@ const AdminPanel = ({ isOpen, onClose, contacts, sports, partners, onUpdateConta
               onRemoveSafety={removeSportSafety}
               onSave={handleSaveSports}
             />
-          </TabsContent>
-
-          <TabsContent value="gallery" className="space-y-4">
-            <GalleryTab />
           </TabsContent>
 
           <TabsContent value="documents" className="space-y-4">

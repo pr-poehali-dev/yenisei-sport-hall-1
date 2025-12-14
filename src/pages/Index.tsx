@@ -3,7 +3,6 @@ import { useToast } from '@/hooks/use-toast';
 import AdminPanel from '@/components/AdminPanel';
 import Header from '@/components/sections/Header';
 import SportsSection from '@/components/sections/SportsSection';
-import PhotoGallery from '@/components/sections/PhotoGallery';
 import FeedbackSection from '@/components/sections/FeedbackSection';
 import FooterSections from '@/components/sections/FooterSections';
 
@@ -346,8 +345,6 @@ const Index = () => {
         captchaInput={captchaInput}
         setCaptchaInput={setCaptchaInput}
       />
-
-      <PhotoGallery />
 
       <FooterSections contacts={contacts} partners={partners} />
 
